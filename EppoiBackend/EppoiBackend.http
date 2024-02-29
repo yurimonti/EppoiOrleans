@@ -1,0 +1,6 @@
+@EppoiBackend_HostAddress = http://localhost:5139
+
+GET {{EppoiBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

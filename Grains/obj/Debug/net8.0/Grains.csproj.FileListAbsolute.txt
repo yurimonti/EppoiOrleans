@@ -1,0 +1,15 @@
+F:\projects\EppoiOrleans\Grains\bin\Debug\net8.0\Grains.deps.json
+F:\projects\EppoiOrleans\Grains\bin\Debug\net8.0\Grains.dll
+F:\projects\EppoiOrleans\Grains\bin\Debug\net8.0\Grains.pdb
+F:\projects\EppoiOrleans\Grains\bin\Debug\net8.0\Abstractions.dll
+F:\projects\EppoiOrleans\Grains\bin\Debug\net8.0\Abstractions.pdb
+F:\projects\EppoiOrleans\Grains\obj\Debug\net8.0\Grains.csproj.AssemblyReference.cache
+F:\projects\EppoiOrleans\Grains\obj\Debug\net8.0\Grains.GeneratedMSBuildEditorConfig.editorconfig
+F:\projects\EppoiOrleans\Grains\obj\Debug\net8.0\Grains.AssemblyInfoInputs.cache
+F:\projects\EppoiOrleans\Grains\obj\Debug\net8.0\Grains.AssemblyInfo.cs
+F:\projects\EppoiOrleans\Grains\obj\Debug\net8.0\Grains.csproj.CoreCompileInputs.cache
+F:\projects\EppoiOrleans\Grains\obj\Debug\net8.0\Grains.csproj.Up2Date
+F:\projects\EppoiOrleans\Grains\obj\Debug\net8.0\Grains.dll
+F:\projects\EppoiOrleans\Grains\obj\Debug\net8.0\refint\Grains.dll
+F:\projects\EppoiOrleans\Grains\obj\Debug\net8.0\Grains.pdb
+F:\projects\EppoiOrleans\Grains\obj\Debug\net8.0\ref\Grains.dll
