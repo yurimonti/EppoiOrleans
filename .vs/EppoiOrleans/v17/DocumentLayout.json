@@ -1,34 +1,46 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "F:\\projects\\EppoiOrleans\\",
+  "WorkspaceRootPath": "F:\\git_repos\\EppoiOrleans\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{24071226-C639-4363-8A35-3DCAA63F3048}|Grains\\Grains.csproj|f:\\projects\\eppoiorleans\\grains\\poigrain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{32F93FBA-A460-495E-A8BC-121CE2A4D4A0}|EppoiBackend\\EppoiBackend.csproj|f:\\git_repos\\eppoiorleans\\eppoibackend\\controllers\\itinerarycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{32F93FBA-A460-495E-A8BC-121CE2A4D4A0}|EppoiBackend\\EppoiBackend.csproj|solutionrelative:eppoibackend\\controllers\\itinerarycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{32F93FBA-A460-495E-A8BC-121CE2A4D4A0}|EppoiBackend\\EppoiBackend.csproj|f:\\git_repos\\eppoiorleans\\eppoibackend\\dtos\\itinerarystatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{32F93FBA-A460-495E-A8BC-121CE2A4D4A0}|EppoiBackend\\EppoiBackend.csproj|solutionrelative:eppoibackend\\dtos\\itinerarystatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{24071226-C639-4363-8A35-3DCAA63F3048}|Grains\\Grains.csproj|f:\\git_repos\\eppoiorleans\\grains\\poigrain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{24071226-C639-4363-8A35-3DCAA63F3048}|Grains\\Grains.csproj|solutionrelative:grains\\poigrain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0C5D77DC-B402-4C63-AA25-6C892BB0B057}|Abstractions\\Abstractions.csproj|f:\\projects\\eppoiorleans\\abstractions\\poistate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{32F93FBA-A460-495E-A8BC-121CE2A4D4A0}|EppoiBackend\\EppoiBackend.csproj|f:\\git_repos\\eppoiorleans\\eppoibackend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{32F93FBA-A460-495E-A8BC-121CE2A4D4A0}|EppoiBackend\\EppoiBackend.csproj|solutionrelative:eppoibackend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{24071226-C639-4363-8A35-3DCAA63F3048}|Grains\\Grains.csproj|f:\\git_repos\\eppoiorleans\\grains\\itinerarygrain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{24071226-C639-4363-8A35-3DCAA63F3048}|Grains\\Grains.csproj|solutionrelative:grains\\itinerarygrain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0C5D77DC-B402-4C63-AA25-6C892BB0B057}|Abstractions\\Abstractions.csproj|f:\\git_repos\\eppoiorleans\\abstractions\\iitinerarygrain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0C5D77DC-B402-4C63-AA25-6C892BB0B057}|Abstractions\\Abstractions.csproj|solutionrelative:abstractions\\iitinerarygrain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0C5D77DC-B402-4C63-AA25-6C892BB0B057}|Abstractions\\Abstractions.csproj|f:\\git_repos\\eppoiorleans\\abstractions\\itinerarystate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0C5D77DC-B402-4C63-AA25-6C892BB0B057}|Abstractions\\Abstractions.csproj|solutionrelative:abstractions\\itinerarystate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0C5D77DC-B402-4C63-AA25-6C892BB0B057}|Abstractions\\Abstractions.csproj|f:\\git_repos\\eppoiorleans\\abstractions\\poistate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0C5D77DC-B402-4C63-AA25-6C892BB0B057}|Abstractions\\Abstractions.csproj|solutionrelative:abstractions\\poistate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{32F93FBA-A460-495E-A8BC-121CE2A4D4A0}|EppoiBackend\\EppoiBackend.csproj|f:\\projects\\eppoiorleans\\eppoibackend\\controllers\\poicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{32F93FBA-A460-495E-A8BC-121CE2A4D4A0}|EppoiBackend\\EppoiBackend.csproj|f:\\git_repos\\eppoiorleans\\eppoibackend\\controllers\\poicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{32F93FBA-A460-495E-A8BC-121CE2A4D4A0}|EppoiBackend\\EppoiBackend.csproj|solutionrelative:eppoibackend\\controllers\\poicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0C5D77DC-B402-4C63-AA25-6C892BB0B057}|Abstractions\\Abstractions.csproj|f:\\projects\\eppoiorleans\\abstractions\\ipoigrain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0C5D77DC-B402-4C63-AA25-6C892BB0B057}|Abstractions\\Abstractions.csproj|solutionrelative:abstractions\\ipoigrain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{32F93FBA-A460-495E-A8BC-121CE2A4D4A0}|EppoiBackend\\EppoiBackend.csproj|f:\\projects\\eppoiorleans\\eppoibackend\\services\\poiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{32F93FBA-A460-495E-A8BC-121CE2A4D4A0}|EppoiBackend\\EppoiBackend.csproj|solutionrelative:eppoibackend\\services\\poiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{32F93FBA-A460-495E-A8BC-121CE2A4D4A0}|EppoiBackend\\EppoiBackend.csproj|f:\\projects\\eppoiorleans\\eppoibackend\\dtos\\poistatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{32F93FBA-A460-495E-A8BC-121CE2A4D4A0}|EppoiBackend\\EppoiBackend.csproj|solutionrelative:eppoibackend\\dtos\\poistatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{32F93FBA-A460-495E-A8BC-121CE2A4D4A0}|EppoiBackend\\EppoiBackend.csproj|f:\\projects\\eppoiorleans\\eppoibackend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{32F93FBA-A460-495E-A8BC-121CE2A4D4A0}|EppoiBackend\\EppoiBackend.csproj|solutionrelative:eppoibackend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{24071226-C639-4363-8A35-3DCAA63F3048}|Grains\\Grains.csproj|f:\\git_repos\\eppoiorleans\\grains\\grains.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{24071226-C639-4363-8A35-3DCAA63F3048}|Grains\\Grains.csproj|solutionrelative:grains\\grains.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,91 +50,136 @@
       "DocumentGroups": [
         {
           "DockedWidth": 125,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "PoiStateDto.cs",
-              "DocumentMoniker": "F:\\projects\\EppoiOrleans\\EppoiBackend\\Dtos\\PoiStateDto.cs",
-              "RelativeDocumentMoniker": "EppoiBackend\\Dtos\\PoiStateDto.cs",
-              "ToolTip": "F:\\projects\\EppoiOrleans\\EppoiBackend\\Dtos\\PoiStateDto.cs",
-              "RelativeToolTip": "EppoiBackend\\Dtos\\PoiStateDto.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAVAAAA",
+              "DocumentIndex": 1,
+              "Title": "ItineraryStateDto.cs",
+              "DocumentMoniker": "F:\\git_repos\\EppoiOrleans\\EppoiBackend\\Dtos\\ItineraryStateDto.cs",
+              "RelativeDocumentMoniker": "EppoiBackend\\Dtos\\ItineraryStateDto.cs",
+              "ToolTip": "F:\\git_repos\\EppoiOrleans\\EppoiBackend\\Dtos\\ItineraryStateDto.cs",
+              "RelativeToolTip": "EppoiBackend\\Dtos\\ItineraryStateDto.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-02-18T18:12:47.744Z"
+              "WhenOpened": "2024-02-29T16:40:55.008Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "IPoiGrain.cs",
-              "DocumentMoniker": "F:\\projects\\EppoiOrleans\\Abstractions\\IPoiGrain.cs",
-              "RelativeDocumentMoniker": "Abstractions\\IPoiGrain.cs",
-              "ToolTip": "F:\\projects\\EppoiOrleans\\Abstractions\\IPoiGrain.cs",
-              "RelativeToolTip": "Abstractions\\IPoiGrain.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAUAAAAnAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-02-18T18:31:04.331Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "PoiService.cs",
-              "DocumentMoniker": "F:\\projects\\EppoiOrleans\\EppoiBackend\\Services\\PoiService.cs",
-              "RelativeDocumentMoniker": "EppoiBackend\\Services\\PoiService.cs",
-              "ToolTip": "F:\\projects\\EppoiOrleans\\EppoiBackend\\Services\\PoiService.cs",
-              "RelativeToolTip": "EppoiBackend\\Services\\PoiService.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-02-18T17:36:35.446Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "PoiState.cs",
-              "DocumentMoniker": "F:\\projects\\EppoiOrleans\\Abstractions\\PoiState.cs",
-              "RelativeDocumentMoniker": "Abstractions\\PoiState.cs",
-              "ToolTip": "F:\\projects\\EppoiOrleans\\Abstractions\\PoiState.cs",
-              "RelativeToolTip": "Abstractions\\PoiState.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAArAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-02-18T15:17:54.351Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "PoiController.cs",
-              "DocumentMoniker": "F:\\projects\\EppoiOrleans\\EppoiBackend\\Controllers\\PoiController.cs",
-              "RelativeDocumentMoniker": "EppoiBackend\\Controllers\\PoiController.cs",
-              "ToolTip": "F:\\projects\\EppoiOrleans\\EppoiBackend\\Controllers\\PoiController.cs",
-              "RelativeToolTip": "EppoiBackend\\Controllers\\PoiController.cs",
-              "ViewState": "AQIAAAYAAAAAAAAAAAAAABcAAAAtAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-02-18T11:44:53.135Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
               "Title": "Program.cs",
-              "DocumentMoniker": "F:\\projects\\EppoiOrleans\\EppoiBackend\\Program.cs",
+              "DocumentMoniker": "F:\\git_repos\\EppoiOrleans\\EppoiBackend\\Program.cs",
               "RelativeDocumentMoniker": "EppoiBackend\\Program.cs",
-              "ToolTip": "F:\\projects\\EppoiOrleans\\EppoiBackend\\Program.cs",
+              "ToolTip": "F:\\git_repos\\EppoiOrleans\\EppoiBackend\\Program.cs",
               "RelativeToolTip": "EppoiBackend\\Program.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAACUAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-02-18T11:39:04.213Z"
+              "WhenOpened": "2024-02-29T16:09:11.325Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "ItineraryController.cs",
+              "DocumentMoniker": "F:\\git_repos\\EppoiOrleans\\EppoiBackend\\Controllers\\ItineraryController.cs",
+              "RelativeDocumentMoniker": "EppoiBackend\\Controllers\\ItineraryController.cs",
+              "ToolTip": "F:\\git_repos\\EppoiOrleans\\EppoiBackend\\Controllers\\ItineraryController.cs",
+              "RelativeToolTip": "EppoiBackend\\Controllers\\ItineraryController.cs",
+              "ViewState": "AQIAABUAAAAAAAAAAAAAwCEAAAAxAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-02-29T15:37:43.515Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "PoiController.cs",
+              "DocumentMoniker": "F:\\git_repos\\EppoiOrleans\\EppoiBackend\\Controllers\\PoiController.cs",
+              "RelativeDocumentMoniker": "EppoiBackend\\Controllers\\PoiController.cs",
+              "ToolTip": "F:\\git_repos\\EppoiOrleans\\EppoiBackend\\Controllers\\PoiController.cs",
+              "RelativeToolTip": "EppoiBackend\\Controllers\\PoiController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAvAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-02-18T11:44:53.135Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ItineraryGrain.cs",
+              "DocumentMoniker": "F:\\git_repos\\EppoiOrleans\\Grains\\ItineraryGrain.cs",
+              "RelativeDocumentMoniker": "Grains\\ItineraryGrain.cs",
+              "ToolTip": "F:\\git_repos\\EppoiOrleans\\Grains\\ItineraryGrain.cs",
+              "RelativeToolTip": "Grains\\ItineraryGrain.cs",
+              "ViewState": "AQIAAA0AAAAAAAAAAAAgwCsAAAAMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-02-29T15:27:22.495Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ItineraryState.cs",
+              "DocumentMoniker": "F:\\git_repos\\EppoiOrleans\\Abstractions\\ItineraryState.cs",
+              "RelativeDocumentMoniker": "Abstractions\\ItineraryState.cs",
+              "ToolTip": "F:\\git_repos\\EppoiOrleans\\Abstractions\\ItineraryState.cs",
+              "RelativeToolTip": "Abstractions\\ItineraryState.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-02-29T15:23:31.624Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "IItineraryGrain.cs",
+              "DocumentMoniker": "F:\\git_repos\\EppoiOrleans\\Abstractions\\IItineraryGrain.cs",
+              "RelativeDocumentMoniker": "Abstractions\\IItineraryGrain.cs",
+              "ToolTip": "F:\\git_repos\\EppoiOrleans\\Abstractions\\IItineraryGrain.cs",
+              "RelativeToolTip": "Abstractions\\IItineraryGrain.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAABYAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-02-29T14:26:08.584Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Grains",
+              "DocumentMoniker": "F:\\git_repos\\EppoiOrleans\\Grains\\Grains.csproj",
+              "RelativeDocumentMoniker": "Grains\\Grains.csproj",
+              "ToolTip": "F:\\git_repos\\EppoiOrleans\\Grains\\Grains.csproj",
+              "RelativeToolTip": "Grains\\Grains.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAABEAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-02-29T13:47:15.264Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "PoiGrain.cs",
-              "DocumentMoniker": "F:\\projects\\EppoiOrleans\\Grains\\PoiGrain.cs",
+              "DocumentMoniker": "F:\\git_repos\\EppoiOrleans\\Grains\\PoiGrain.cs",
               "RelativeDocumentMoniker": "Grains\\PoiGrain.cs",
-              "ToolTip": "F:\\projects\\EppoiOrleans\\Grains\\PoiGrain.cs",
+              "ToolTip": "F:\\git_repos\\EppoiOrleans\\Grains\\PoiGrain.cs",
               "RelativeToolTip": "Grains\\PoiGrain.cs",
-              "ViewState": "AQIAAA0AAAAAAAAAAAAgwDAAAAAFAAAA",
+              "ViewState": "AQIAAAsAAAAAAAAAAAAQwCIAAAATAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-02-17T16:37:00.281Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PoiState.cs",
+              "DocumentMoniker": "F:\\git_repos\\EppoiOrleans\\Abstractions\\PoiState.cs",
+              "RelativeDocumentMoniker": "Abstractions\\PoiState.cs",
+              "ToolTip": "F:\\git_repos\\EppoiOrleans\\Abstractions\\PoiState.cs",
+              "RelativeToolTip": "Abstractions\\PoiState.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAArAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-02-18T15:17:54.351Z",
               "EditorCaption": ""
             }
           ]

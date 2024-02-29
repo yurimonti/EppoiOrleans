@@ -13,6 +13,7 @@ builder.Services.AddControllers();
 builder.Host.UseOrleans(siloBuilder =>
 {
     siloBuilder.UseLocalhostClustering();
+    siloBuilder.UseDashboard();
     siloBuilder.AddRedisGrainStorageAsDefault(options =>
     {
         options.ConfigurationOptions = new ConfigurationOptions();

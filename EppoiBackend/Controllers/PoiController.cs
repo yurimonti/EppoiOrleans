@@ -1,12 +1,11 @@
 ﻿using Abstractions;
 using EppoiBackend.Dtos;
 using Microsoft.AspNetCore.Mvc;
-using Orleans.Runtime;
 
 namespace EppoiBackend.Controllers
 {
     [ApiController]
-    [Route("api/")]
+    [Route("api/poi/")]
     public class PoiController : ControllerBase
     {
         private readonly IGrainFactory _grainFactory;

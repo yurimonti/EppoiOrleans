@@ -3705,11 +3705,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "F:\\projects\\EppoiOrleans\\Grains\\Grains.csproj",
+      "projectUniqueName": "F:\\git_repos\\EppoiOrleans\\Grains\\Grains.csproj",
       "projectName": "Grains",
-      "projectPath": "F:\\projects\\EppoiOrleans\\Grains\\Grains.csproj",
+      "projectPath": "F:\\git_repos\\EppoiOrleans\\Grains\\Grains.csproj",
       "packagesPath": "C:\\Users\\Yuri Monti\\.nuget\\packages\\",
-      "outputPath": "F:\\projects\\EppoiOrleans\\Grains\\obj\\",
+      "outputPath": "F:\\git_repos\\EppoiOrleans\\Grains\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Yuri Monti\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -3726,8 +3726,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "F:\\projects\\EppoiOrleans\\Abstractions\\Abstractions.csproj": {
-              "projectPath": "F:\\projects\\EppoiOrleans\\Abstractions\\Abstractions.csproj"
+            "F:\\git_repos\\EppoiOrleans\\Abstractions\\Abstractions.csproj": {
+              "projectPath": "F:\\git_repos\\EppoiOrleans\\Abstractions\\Abstractions.csproj"
             }
           }
         }

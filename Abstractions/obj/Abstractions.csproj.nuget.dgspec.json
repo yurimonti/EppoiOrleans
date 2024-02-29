@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "F:\\projects\\EppoiOrleans\\Abstractions\\Abstractions.csproj": {}
+    "F:\\git_repos\\EppoiOrleans\\Abstractions\\Abstractions.csproj": {}
   },
   "projects": {
-    "F:\\projects\\EppoiOrleans\\Abstractions\\Abstractions.csproj": {
+    "F:\\git_repos\\EppoiOrleans\\Abstractions\\Abstractions.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\projects\\EppoiOrleans\\Abstractions\\Abstractions.csproj",
+        "projectUniqueName": "F:\\git_repos\\EppoiOrleans\\Abstractions\\Abstractions.csproj",
         "projectName": "Abstractions",
-        "projectPath": "F:\\projects\\EppoiOrleans\\Abstractions\\Abstractions.csproj",
+        "projectPath": "F:\\git_repos\\EppoiOrleans\\Abstractions\\Abstractions.csproj",
         "packagesPath": "C:\\Users\\Yuri Monti\\.nuget\\packages\\",
-        "outputPath": "F:\\projects\\EppoiOrleans\\Abstractions\\obj\\",
+        "outputPath": "F:\\git_repos\\EppoiOrleans\\Abstractions\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Yuri Monti\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -10,3 +10,16 @@ F:\projects\EppoiOrleans\Abstractions\obj\Debug\net8.0\Abstractions.dll
 F:\projects\EppoiOrleans\Abstractions\obj\Debug\net8.0\refint\Abstractions.dll
 F:\projects\EppoiOrleans\Abstractions\obj\Debug\net8.0\Abstractions.pdb
 F:\projects\EppoiOrleans\Abstractions\obj\Debug\net8.0\ref\Abstractions.dll
+F:\git_repos\EppoiOrleans\Abstractions\bin\Debug\net8.0\Abstractions.deps.json
+F:\git_repos\EppoiOrleans\Abstractions\bin\Debug\net8.0\Abstractions.dll
+F:\git_repos\EppoiOrleans\Abstractions\bin\Debug\net8.0\Abstractions.pdb
+F:\git_repos\EppoiOrleans\Abstractions\obj\Debug\net8.0\Abstractions.csproj.AssemblyReference.cache
+F:\git_repos\EppoiOrleans\Abstractions\obj\Debug\net8.0\Abstractions.GeneratedMSBuildEditorConfig.editorconfig
+F:\git_repos\EppoiOrleans\Abstractions\obj\Debug\net8.0\Abstractions.AssemblyInfoInputs.cache
+F:\git_repos\EppoiOrleans\Abstractions\obj\Debug\net8.0\Abstractions.AssemblyInfo.cs
+F:\git_repos\EppoiOrleans\Abstractions\obj\Debug\net8.0\Abstractions.csproj.CoreCompileInputs.cache
+F:\git_repos\EppoiOrleans\Abstractions\obj\Debug\net8.0\Abstractions.sourcelink.json
+F:\git_repos\EppoiOrleans\Abstractions\obj\Debug\net8.0\Abstractions.dll
+F:\git_repos\EppoiOrleans\Abstractions\obj\Debug\net8.0\refint\Abstractions.dll
+F:\git_repos\EppoiOrleans\Abstractions\obj\Debug\net8.0\Abstractions.pdb
+F:\git_repos\EppoiOrleans\Abstractions\obj\Debug\net8.0\ref\Abstractions.dll
