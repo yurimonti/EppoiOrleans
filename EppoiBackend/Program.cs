@@ -1,3 +1,5 @@
+using Abstractions;
+using EppoiBackend.Dtos;
 using StackExchange.Redis;
 
 Console.WriteLine("Website: Waiting");
@@ -9,6 +11,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers();
+
+builder.Services.AddTransient<IStateToDtoConverter<IItineraryGrain,ItineraryStateDto>, ItineraryStateToDtoConverter>();
 
 builder.Host.UseOrleans(siloBuilder =>
 {
