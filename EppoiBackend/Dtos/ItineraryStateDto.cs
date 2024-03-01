@@ -1,4 +1,5 @@
 ﻿using Abstractions;
+using System.Text.Json.Serialization;
 
 namespace EppoiBackend.Dtos
 {

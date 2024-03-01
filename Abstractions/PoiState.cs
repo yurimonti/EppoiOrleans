@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 namespace Abstractions
 {
     [GenerateSerializer, Immutable]
-    public sealed class PoiState
+    public sealed record class PoiState
     {
-        public required long Id { get; set; }
+        public long Id { get; set; }
         public required string Name { get; set; }
         public string Description { get; set; }
         public (double Lat,double Lon) Coordinate { get; set; }

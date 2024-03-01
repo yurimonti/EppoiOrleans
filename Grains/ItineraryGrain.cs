@@ -31,23 +31,23 @@ namespace Grains
         public override Task OnActivateAsync(CancellationToken cancellationToken)
         {
             //await UpdateItineraryParams();
-            //_logger.LogInformation($"itinerary grain with id: {this.GetPrimaryKeyString()} is just activated");
+            _logger.LogInformation($"itinerary grain with id: {this.GetPrimaryKeyString()} is just activated");
             return base.OnActivateAsync(cancellationToken);
         }
 
         public override Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
         {
             //await UpdateItineraryParams();
-            //_logger.LogInformation($"itinerary grain with id: {this.GetPrimaryKeyString()} is just deactivated");
+            _logger.LogInformation($"itinerary grain with id: {this.GetPrimaryKeyString()} is just deactivated");
             _pois.Clear();
             return base.OnDeactivateAsync(reason, cancellationToken);
         }
 
-        public async ValueTask SetState(long id, string name, string description, List<long> pois)
+        public async ValueTask SetState(long? id, string name, string description, List<long> pois)
         {
             _state.State.Name = name;
             _state.State.Pois = pois;
-            _state.State.Id = id;
+            if(id != null) _state.State.Id = (long)id;
             _state.State.Description = description;
             //_state.State.TimeToVisit = timeToVisit;
             await _state.WriteStateAsync();
@@ -55,11 +55,13 @@ namespace Grains
             await UpdateItineraryParams();
         }
 
-        //Todo: source cannot be null, this error happens when grain is activating and no state is present yet
+        /**
+         * Set
+         **/
         private async ValueTask UpdateItineraryParams()
         {
             _pois.Clear();
-            //if (_state is not { State.Pois.Count: > 0 }) return;
+            if (_state is not { State.Pois.Count: > 0 }) return;
             foreach (var id in  _state.State.Pois)
             {
                 _logger.LogTrace("Id of poi ->", id);

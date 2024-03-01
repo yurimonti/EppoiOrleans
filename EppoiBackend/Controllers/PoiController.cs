@@ -4,23 +4,27 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EppoiBackend.Controllers
 {
+    //TODO: handle rest controller as the itinerary one ( check if exists, return http status etc...)
     [ApiController]
     [Route("api/poi/")]
     public class PoiController : ControllerBase
     {
         private readonly IGrainFactory _grainFactory;
-        private readonly Random _random = new Random();
+        private readonly Random _random = new();
+        private readonly IStateToDtoConverter<IPoiGrain, PoiStateDto> _converter;
 
-        public PoiController(IGrainFactory grainFactory)
+        public PoiController(IGrainFactory grainFactory, IStateToDtoConverter<IPoiGrain, PoiStateDto> converter)
         {
             _grainFactory = grainFactory;
+            _converter = converter;
         }
 
         [HttpGet("{id}")]
-        public async ValueTask<PoiState> GetPoiState(string id)
+        public async ValueTask<IActionResult> GetPoiState(string id)
         {
             IPoiGrain poiGrain = _grainFactory.GetGrain<IPoiGrain>($"poi{id}");
-            return await poiGrain.GetPoiState();
+            PoiStateDto toReturn = await _converter.ConvertToDto(poiGrain);
+            return Ok(toReturn);
         }
 
         [HttpPut("{id}")]

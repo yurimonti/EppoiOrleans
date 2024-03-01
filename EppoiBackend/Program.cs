@@ -12,7 +12,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers();
 
-builder.Services.AddTransient<IStateToDtoConverter<IItineraryGrain,ItineraryStateDto>, ItineraryStateToDtoConverter>();
+builder.Services.AddSingleton<IStateToDtoConverter<IItineraryGrain,ItineraryStateDto>, ItineraryStateToDtoConverter>();
+builder.Services.AddSingleton<IStateToDtoConverter<IPoiGrain,PoiStateDto>, PoiStateDtoConverter>();
 
 builder.Host.UseOrleans(siloBuilder =>
 {
