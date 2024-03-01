@@ -1,6 +1,7 @@
 ﻿using Abstractions;
 using EppoiBackend.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Text.Json;
 
 namespace EppoiBackend.Controllers
@@ -11,17 +12,19 @@ namespace EppoiBackend.Controllers
     {
         private readonly IGrainFactory _grainFactory;
         private readonly Random _random = new Random();
+        private readonly IStateToDtoConverter<IItineraryGrain, ItineraryStateDto> _converter;
 
-        public ItineraryController(IGrainFactory grainFactory)
+        public ItineraryController(IGrainFactory grainFactory, IStateToDtoConverter<IItineraryGrain, ItineraryStateDto> converter)
         {
             _grainFactory = grainFactory;
+            _converter = converter;
         }
 
         [HttpGet("{id}")]
-        public async ValueTask<ItineraryState> GetItineraryState(string id)
+        public async ValueTask<ItineraryStateDto> GetItineraryState(string id)
         {
             IItineraryGrain itineraryGrain = _grainFactory.GetGrain<IItineraryGrain>($"itinerary{id}");
-            return await itineraryGrain.GetState();
+            return await _converter.ConvertToDto(itineraryGrain);
         }
 
         [HttpPut("{id}")]
@@ -33,20 +36,20 @@ namespace EppoiBackend.Controllers
         }
         
         [HttpPost]
-        public async ValueTask<IActionResult> CreateItinerary([FromBody] ItineraryStateDto state)
+        public async ValueTask<ItineraryStateDto> CreateItinerary([FromBody] ItineraryState state)
         {
             long grainId = _random.NextInt64();
-            double timeToVisit = 0d;
-            foreach (var poiId in state.Pois)
-            {
-                var poi = _grainFactory.GetGrain<IPoiGrain>($"poi{poiId}");
-                PoiState aState = await poi.GetPoiState();
-                timeToVisit += aState.TimeToVisit;
-            };
-            Console.WriteLine($"final timeToVisit : {timeToVisit}");
+            //double timeToVisit = 0d;
+            //foreach (var poiId in state.Pois)
+            //{
+            //    var poi = _grainFactory.GetGrain<IPoiGrain>($"poi{poiId}");
+            //    PoiState aState = await poi.GetPoiState();
+            //    timeToVisit += aState.TimeToVisit;
+            //};
+            //Console.WriteLine($"final timeToVisit : {timeToVisit}");
             IItineraryGrain itineraryGrain = _grainFactory.GetGrain<IItineraryGrain>($"itinerary{grainId}");
-            await itineraryGrain.SetState(grainId, state.Name, state.Description, timeToVisit, state.Pois);
-            return Ok();
+            await itineraryGrain.SetState(grainId, state.Name, state.Description, state.Pois);
+            return await _converter.ConvertToDto(itineraryGrain);
         }
     }
 }
