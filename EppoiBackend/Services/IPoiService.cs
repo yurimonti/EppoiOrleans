@@ -10,5 +10,8 @@ namespace EppoiBackend.Services
         Task<PoiStateDto> GetAPoi(long id);
 
         Task<List<PoiStateDto>> GetAllPois();
+
+        Task<List<PoiStateDto>> GetPois(List<long> poiIDs);
+        Task<PoiStateDto> UpdatePoi(long poiID, PoiStateDto state);
     }
 }

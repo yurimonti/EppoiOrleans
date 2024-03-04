@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Grains")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8503e8c00683234c701f74c4632ea6139bc4dc10")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c34f46419a03a75f0444f201b90c12a8a24d867a")]
 [assembly: System.Reflection.AssemblyProductAttribute("Grains")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Grains")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
