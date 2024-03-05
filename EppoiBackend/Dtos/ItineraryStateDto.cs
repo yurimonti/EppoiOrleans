@@ -9,6 +9,6 @@ namespace EppoiBackend.Dtos
         public string Name { get; set; }
         public string Description { get; set; }
         public double TimeToVisit { get; set; }
-        public List<PoiState> Pois { get; set; }
+        public List<PoiStateDto> Pois { get; set; }
     }
 }

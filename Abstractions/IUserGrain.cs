@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Abstractions
 {
-    internal interface IUserGrain
+    public interface IUserGrain : IGrainWithStringKey
     {
+        Task<UserState> GetState();
+        Task SetState(Guid id, string username, List<long> itineraryIDs);
+        Task SetState(string username, List<long> itineraryIDs);
     }
 }

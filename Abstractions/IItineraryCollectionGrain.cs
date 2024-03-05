@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace Abstractions
 {
-    internal interface IItineraryCollectionGrain
+    public interface IItineraryCollectionGrain : IGrainWithStringKey
     {
+        Task<List<ItineraryState>> GetAllItineraries();
+        ValueTask AddItinerary(long id);
+        ValueTask<List<long>> GetAllItineraryIds();
+        ValueTask RemoveItinerary(long id);
     }
 }

@@ -16,6 +16,7 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<IStateToDtoConverter<IItineraryGrain,ItineraryStateDto>, ItineraryStateToDtoConverter>();
 builder.Services.AddSingleton<IStateToDtoConverter<IPoiGrain,PoiStateDto>, PoiStateDtoConverter>();
 builder.Services.AddSingleton<IPoiService,PoiService>();
+builder.Services.AddSingleton<IItineraryService,ItineraryService>();
 
 builder.Host.UseOrleans(siloBuilder =>
 {

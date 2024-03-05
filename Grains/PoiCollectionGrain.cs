@@ -24,10 +24,10 @@ namespace Grains
             _pois = new();
         }
 
-        public override Task OnActivateAsync(CancellationToken cancellationToken)
+        public override async Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            _ = UpdateParams();
-            return base.OnActivateAsync(cancellationToken);
+            await UpdateParams();
+            await base.OnActivateAsync(cancellationToken);
         }
 
         public async ValueTask AddPoi(long id)
@@ -64,7 +64,7 @@ namespace Grains
                 IPoiGrain poiGrain = GrainFactory.GetGrain<IPoiGrain>($"poi{id}");
                 PoiState poiState = await poiGrain.GetPoiState();
                 _pois.Add(poiState);
-                _logger.LogInformation($"Poi list information are just loaded to itinerary {this.GetPrimaryKeyString()}");
+                _logger.LogInformation($"Poi list information are just loaded to collection {this.GetPrimaryKeyString()}");
             };
         }
     }

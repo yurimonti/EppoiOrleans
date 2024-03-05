@@ -61,7 +61,6 @@ namespace EppoiBackend.Controllers
                 return Ok(toReturn);
             }
             else return Unauthorized();
-
         }
 
         [HttpGet("{id}/poi/{poiId}")]
@@ -77,7 +76,6 @@ namespace EppoiBackend.Controllers
                 return Ok(poi);
             }
             else return Unauthorized();
-
         }
 
         [HttpPost("{id}/poi/")]
