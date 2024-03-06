@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Grains
@@ -26,8 +27,15 @@ namespace Grains
 
         public override async Task OnActivateAsync(CancellationToken cancellationToken)
         {
+            _logger.LogInformation($"PoiCollectionGrain: {this.GetGrainId} was just activated");
             await UpdateParams();
             await base.OnActivateAsync(cancellationToken);
+        }
+
+        public override Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation($"PoiCollectionGrain: {this.GetGrainId} was just deactivated");
+            return base.OnDeactivateAsync(reason, cancellationToken);
         }
 
         public async ValueTask AddPoi(long id)
@@ -35,15 +43,21 @@ namespace Grains
             _state.State.Add(id);
             await _state.WriteStateAsync();
             await UpdateParams();
+            _logger.LogInformation($"PoiCollectionGrain: {this.GetGrainId} setted its state");
+            _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {this.GetPrimaryKeyString()}");
         }
 
         public async ValueTask<List<long>> GetAllPoisIds()
         {
+            _logger.LogInformation($"PoiCollectionGrain: {this.GetGrainId} retrieved its state");
+            _logger.LogInformation($"The resulting state for {this.GetPrimaryKeyString()} is {JsonSerializer.Serialize(_state.State)}");
             return await Task.FromResult(_state.State);
         }
 
         public async Task<List<PoiState>> GetAllPois()
         {
+            _logger.LogInformation($"PoiCollectionGrain: {this.GetGrainId} retrieved its local not persistent state");
+            _logger.LogInformation($"The resulting not persistent state for {this.GetPrimaryKeyString()} is {JsonSerializer.Serialize(_pois)}");
             return await Task.FromResult(_pois);
         }
 
@@ -52,6 +66,8 @@ namespace Grains
             _state.State.Remove(id);
             await _state.WriteStateAsync();
             await UpdateParams();
+            _logger.LogInformation($"PoiCollectionGrain: {this.GetGrainId} setted its state");
+            _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {this.GetPrimaryKeyString()}");
         }
 
         private async ValueTask UpdateParams()

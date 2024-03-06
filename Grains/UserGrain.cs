@@ -19,8 +19,21 @@ namespace Grains
         public async Task<UserState> GetState()
         {
             UserState state = _state.State;
+            _logger.LogInformation($"UserGrain: {this.GetGrainId} retrieved its state");
             _logger.LogInformation($"The resulting state for {this.GetPrimaryKeyString()} is {JsonSerializer.Serialize(state)}");
             return await ValueTask.FromResult(state);
+        }
+
+        public override Task OnActivateAsync(CancellationToken cancellationToken)
+        {
+            _logger.LogInformation($"UserGrain: {this.GetGrainId} was just activated");
+            return base.OnActivateAsync(cancellationToken);
+        }
+
+        public override Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation($"UserGrain: {this.GetGrainId} was just deactivated");
+            return base.OnDeactivateAsync(reason, cancellationToken);
         }
 
         public async Task SetState(Guid id, string username, List<long> itineraryIDs)
@@ -29,6 +42,7 @@ namespace Grains
             _state.State.ItineraryIDs = itineraryIDs;
             _state.State.Id = id;
             await _state.WriteStateAsync();
+            _logger.LogInformation($"UserGrain: {this.GetGrainId} setted its state");
             _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {this.GetPrimaryKeyString()}");
         }
 
@@ -38,6 +52,7 @@ namespace Grains
             _state.State.ItineraryIDs = itineraryIDs;
             await _state.WriteStateAsync();
             _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {this.GetPrimaryKeyString()}");
+            _logger.LogInformation($"UserGrain: {this.GetGrainId} setted its state");
         }
     }
 }

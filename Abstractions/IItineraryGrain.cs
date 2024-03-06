@@ -2,8 +2,9 @@
 {
     public interface IItineraryGrain : IGrainWithStringKey
     {
-        ValueTask<ItineraryState> GetState();
-        ValueTask SetState(long? id, string name, string description, List<long> pois);
-        ValueTask<List<PoiState>> GetPois();
+        Task<ItineraryState> GetState();
+        Task SetState(long? id, string name, string description, List<long> pois);
+        Task<List<PoiState>> GetPois();
+        Task ClearState();
     }
 }

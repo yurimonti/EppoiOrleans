@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Abstractions
+﻿namespace Abstractions
 {
     public interface IItineraryCollectionGrain : IGrainWithStringKey
     {
         Task<List<ItineraryState>> GetAllItineraries();
-        ValueTask AddItinerary(long id);
-        ValueTask<List<long>> GetAllItineraryIds();
-        ValueTask RemoveItinerary(long id);
+        Task<bool> ItineraryExists(long id);
+        Task AddItinerary(long id);
+        Task<List<long>> GetAllItineraryIds();
+        Task RemoveItinerary(long id);
     }
 }

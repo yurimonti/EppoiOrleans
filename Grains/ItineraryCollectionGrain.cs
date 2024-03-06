@@ -1,11 +1,7 @@
 ﻿using Abstractions;
 using Microsoft.Extensions.Logging;
 using Orleans.Runtime;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace Grains
 {
@@ -24,40 +20,53 @@ namespace Grains
             _itineraries = new();
         }
 
-        public override Task OnActivateAsync(CancellationToken cancellationToken)
+        public override async Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            _ = UpdateParams();
-            return base.OnActivateAsync(cancellationToken);
+            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetGrainId} was just activated");
+            await UpdateParams();
+            await base.OnActivateAsync(cancellationToken);
         }
 
-        public async ValueTask AddItinerary(long id)
+        public override Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetGrainId} was just deactivated");
+            return base.OnDeactivateAsync(reason, cancellationToken);
+        }
+
+        public async Task AddItinerary(long id)
         {
             _state.State.Add(id);
             await _state.WriteStateAsync();
             await UpdateParams();
+            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetGrainId} setted its state");
+            _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {this.GetPrimaryKeyString()}");
         }
 
-        public async ValueTask<List<long>> GetAllItineraryIds()
+        public async Task<List<long>> GetAllItineraryIds()
         {
+            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetGrainId} retrieved its state");
+            _logger.LogInformation($"The resulting state for {this.GetPrimaryKeyString()} is {JsonSerializer.Serialize(_state.State)}");
             return await Task.FromResult(_state.State);
         }
 
         public async Task<List<ItineraryState>> GetAllItineraries()
         {
-            _logger.LogInformation($"itinerary collection grain {this.GetGrainId()} is trying to retrive all itineraries");
             var result = await Task.FromResult(_itineraries);
-            _logger.LogInformation($"itinerary collection grain {this.GetGrainId()} retrives all itineraries: {_itineraries}");
+            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetGrainId} retrivied its local not persistent state");
+            _logger.LogInformation($"The resulting not persistent state for {this.GetPrimaryKeyString()} is {JsonSerializer.Serialize(_itineraries)}");
             return result;
         }
 
-        public async ValueTask RemoveItinerary(long id)
+        public async Task RemoveItinerary(long id)
         {
             _state.State.Remove(id);
             await _state.WriteStateAsync();
             await UpdateParams();
+            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetGrainId} setted its state");
+            _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {this.GetPrimaryKeyString()}");
         }
 
-        private async ValueTask UpdateParams()
+        private async Task UpdateParams()
         {
             _itineraries.Clear();
             if (_state is not { State.Count: > 0 }) return;
@@ -69,6 +78,11 @@ namespace Grains
                 _itineraries.Add(itineraryState);
                 _logger.LogInformation($"Itinerary list information are just loaded to collection {this.GetPrimaryKeyString()}");
             };
+        }
+        //TODO: maybe is useless
+        public async Task<bool> ItineraryExists(long id)
+        {
+            return await Task.FromResult(_state.State.Contains(id));
         }
     }
 }

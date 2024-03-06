@@ -20,17 +20,20 @@ namespace Grains
 
         public override Task OnActivateAsync(CancellationToken cancellationToken)
         {
+            _logger.LogInformation($"PoiGrain: {this.GetGrainId} was just activated");
             return base.OnActivateAsync(cancellationToken);
         }
 
         public override Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
         {
+            _logger.LogInformation($"PoiGrain: {this.GetGrainId} was just deactivated");
             return base.OnDeactivateAsync(reason, cancellationToken);
         }
 
         public async ValueTask<PoiState> GetPoiState()
         {
             PoiState state = _state.State;
+            _logger.LogInformation($"PoiGrain: {this.GetGrainId} retrieved its state");
             _logger.LogInformation($"The resulting state for {this.GetPrimaryKeyString()} is {JsonSerializer.Serialize(state)}");
             return await ValueTask.FromResult(state);
         }
@@ -44,6 +47,7 @@ namespace Grains
             _state.State.TimeToVisit = timeToVisit;
             _state.State.Coordinate = coordinate;
             await _state.WriteStateAsync();
+            _logger.LogInformation($"PoiGrain: {this.GetGrainId} setted its state");
             _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {this.GetPrimaryKeyString()}");
         }
     }

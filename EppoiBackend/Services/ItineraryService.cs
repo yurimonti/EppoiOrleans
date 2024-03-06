@@ -1,5 +1,6 @@
 ﻿using Abstractions;
 using EppoiBackend.Dtos;
+using Grains;
 using Microsoft.Extensions.Logging;
 
 namespace EppoiBackend.Services
@@ -19,13 +20,16 @@ namespace EppoiBackend.Services
             _poiService = poiService;
         }
 
-        //TODO: implement this method
-        public Task<ItineraryState> CreateItinerary(ItineraryStateDto state)
+        public async Task<ItineraryState> CreateItinerary(ItineraryStateDto state)
         {
-            throw new NotImplementedException();
+            long idToSet = rnd.NextInt64();
+            IItineraryCollectionGrain itineraryCollectionGrain = _grainFactory.GetGrain<IItineraryCollectionGrain>(ITINERARY_COLLECTION_ID);
+            IItineraryGrain itineraryGrain = _grainFactory.GetGrain<IItineraryGrain>($"itinerary{idToSet}");
+            await itineraryGrain.SetState(idToSet, state.Name, state.Description, state.Pois.Select(p => p.Id).ToList());
+            await itineraryCollectionGrain.AddItinerary(idToSet);
+            return await itineraryGrain.GetState();
         }
 
-        //TODO: vedere problema
         public async Task<List<ItineraryStateDto>> GetAllItineraries(Func<ItineraryStateDto, bool>? predicate)
         {
             Console.WriteLine($"itinerary collection grain should be activated in a while");
@@ -52,14 +56,36 @@ namespace EppoiBackend.Services
             };
         }
 
-        public Task<ItineraryStateDto> GetAnItinerary(long itineraryID)
+        public async Task<ItineraryStateDto> GetAnItinerary(long itineraryID)
         {
-            throw new NotImplementedException();
+            IItineraryCollectionGrain itineraryCollectionGrain = _grainFactory.GetGrain<IItineraryCollectionGrain>(ITINERARY_COLLECTION_ID);
+            await ThrowExceptionIfItineraryNotExists(itineraryCollectionGrain, itineraryID);
+            IItineraryGrain itGrain = _grainFactory.GetGrain<IItineraryGrain>($"itinerary{itineraryID}");
+            var itState = await itGrain.GetState();
+            return await ConvertToDto(itState);
         }
 
-        public Task<ItineraryStateDto> UpdateItinerary(long itineraryID, ItineraryStateDto state)
+        public async Task<ItineraryStateDto> UpdateItinerary(long itineraryID, ItineraryStateDto state)
         {
-            throw new NotImplementedException();
+            IItineraryCollectionGrain itineraryCollectionGrain = _grainFactory.GetGrain<IItineraryCollectionGrain>(ITINERARY_COLLECTION_ID);
+            await ThrowExceptionIfItineraryNotExists(itineraryCollectionGrain, itineraryID);
+            IItineraryGrain itineraryGrain = _grainFactory.GetGrain<IItineraryGrain>($"itinerary{itineraryID}");
+            await itineraryGrain.SetState(itineraryID, state.Name, state.Description, state.Pois.Select(p => p.Id).ToList());
+            return await ConvertToDto(await itineraryGrain.GetState());
+        }
+
+        public async Task DeleteItinerary(long id)
+        {
+            IItineraryCollectionGrain itineraryCollectionGrain = _grainFactory.GetGrain<IItineraryCollectionGrain>(ITINERARY_COLLECTION_ID);
+            await ThrowExceptionIfItineraryNotExists(itineraryCollectionGrain, id);
+            IItineraryGrain itineraryGrain = _grainFactory.GetGrain<IItineraryGrain>($"itinerary{id}");
+            await itineraryGrain.ClearState();
+            await itineraryCollectionGrain.RemoveItinerary(id);
+        }
+
+        private async Task ThrowExceptionIfItineraryNotExists(IItineraryCollectionGrain collectionGrain,long idToCheck)
+        {
+            if (!await collectionGrain.ItineraryExists(idToCheck)) throw new ArgumentException($"Itinerary with id:{idToCheck} doesn't exist");
         }
     }
 }

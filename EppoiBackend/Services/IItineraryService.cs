@@ -7,6 +7,7 @@ namespace EppoiBackend.Services
     public interface IItineraryService
     {
         Task<ItineraryState> CreateItinerary(ItineraryStateDto state);
+        Task DeleteItinerary(long id);
         Task<List<ItineraryStateDto>> GetAllItineraries(Func<ItineraryStateDto, bool>? predicate);
         Task<ItineraryStateDto> GetAnItinerary(long itineraryID);
         Task<ItineraryStateDto> UpdateItinerary(long itineraryID, ItineraryStateDto state);
