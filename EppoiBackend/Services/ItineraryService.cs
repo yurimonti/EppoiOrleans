@@ -1,10 +1,9 @@
 ﻿using Abstractions;
 using EppoiBackend.Dtos;
-using Grains;
-using Microsoft.Extensions.Logging;
 
 namespace EppoiBackend.Services
 {
+    //TODO: use State instead of DTOs
     public class ItineraryService : IItineraryService
     {
         private readonly Random rnd = new();
@@ -19,11 +18,18 @@ namespace EppoiBackend.Services
             _converter = converter;
             _poiService = poiService;
         }
-
+        
         public async Task<ItineraryState> CreateItinerary(ItineraryStateDto state)
         {
             long idToSet = rnd.NextInt64();
+            int tries = 0;
             IItineraryCollectionGrain itineraryCollectionGrain = _grainFactory.GetGrain<IItineraryCollectionGrain>(ITINERARY_COLLECTION_ID);
+            while (await itineraryCollectionGrain.ItineraryExists(idToSet))
+            {
+                if (tries >= 10) throw new Exception("Lot of tries to find a valid id for a new itinerary");
+                idToSet = rnd.NextInt64();
+                tries++;
+            }
             IItineraryGrain itineraryGrain = _grainFactory.GetGrain<IItineraryGrain>($"itinerary{idToSet}");
             await itineraryGrain.SetState(idToSet, state.Name, state.Description, state.Pois.Select(p => p.Id).ToList());
             await itineraryCollectionGrain.AddItinerary(idToSet);

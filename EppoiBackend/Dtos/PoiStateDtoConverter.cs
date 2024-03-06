@@ -11,7 +11,7 @@ namespace EppoiBackend.Dtos
             {
                 Name = state.Name,
                 Description = state.Description,
-                Coordinate = state.Coordinate,
+                Coords = state.Coords,
                 Address = state.Address,
                 Id = state.Id,
                 TimeToVisit = state.TimeToVisit

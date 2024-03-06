@@ -30,7 +30,7 @@ namespace Grains
             return base.OnDeactivateAsync(reason, cancellationToken);
         }
 
-        public async ValueTask<PoiState> GetPoiState()
+        public async Task<PoiState> GetPoiState()
         {
             PoiState state = _state.State;
             _logger.LogInformation($"PoiGrain: {this.GetGrainId} retrieved its state");
@@ -38,17 +38,23 @@ namespace Grains
             return await ValueTask.FromResult(state);
         }
 
-        public async ValueTask SetState(long id,string name, string description, string address, double timeToVisit, (double lat, double lon) coordinate)
+        public async Task SetState(long id,string name, string description, string address, double timeToVisit, Coordinate coordinate)
         {
             _state.State.Name = name;
             _state.State.Address = address;
             _state.State.Id = id;
             _state.State.Description = description;
             _state.State.TimeToVisit = timeToVisit;
-            _state.State.Coordinate = coordinate;
+            _state.State.Coords = coordinate;
             await _state.WriteStateAsync();
             _logger.LogInformation($"PoiGrain: {this.GetGrainId} setted its state");
             _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {this.GetPrimaryKeyString()}");
+        }
+
+        public async Task ClearState()
+        {
+            await _state.ClearStateAsync();
+            _logger.LogInformation($"PoiGrain: {this.GetGrainId} state was just cleared");
         }
     }
 }

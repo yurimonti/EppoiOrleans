@@ -7,5 +7,7 @@
         Task AddItinerary(long id);
         Task<List<long>> GetAllItineraryIds();
         Task RemoveItinerary(long id);
+
+        Task RemoveItinerariesWithPoi(long removedPoi);
     }
 }

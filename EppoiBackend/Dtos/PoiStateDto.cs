@@ -1,4 +1,6 @@
-﻿namespace EppoiBackend.Dtos
+﻿using Abstractions;
+
+namespace EppoiBackend.Dtos
 {
     public record class PoiStateDto
     {
@@ -7,7 +9,7 @@
         public string Description { get; set; }
         public string Address { get; set; }
 
-        public (double Lat, double Lon) Coordinate { get; set; }
+        public Coordinate Coords { get; set; }
         public double TimeToVisit { get; set; }
     }
 }

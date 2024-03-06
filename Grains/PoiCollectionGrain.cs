@@ -38,7 +38,7 @@ namespace Grains
             return base.OnDeactivateAsync(reason, cancellationToken);
         }
 
-        public async ValueTask AddPoi(long id)
+        public async Task AddPoi(long id)
         {
             _state.State.Add(id);
             await _state.WriteStateAsync();
@@ -47,7 +47,7 @@ namespace Grains
             _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {this.GetPrimaryKeyString()}");
         }
 
-        public async ValueTask<List<long>> GetAllPoisIds()
+        public async Task<List<long>> GetAllPoisIds()
         {
             _logger.LogInformation($"PoiCollectionGrain: {this.GetGrainId} retrieved its state");
             _logger.LogInformation($"The resulting state for {this.GetPrimaryKeyString()} is {JsonSerializer.Serialize(_state.State)}");
@@ -61,7 +61,7 @@ namespace Grains
             return await Task.FromResult(_pois);
         }
 
-        public async ValueTask RemovePoi(long id)
+        public async Task RemovePoi(long id)
         {
             _state.State.Remove(id);
             await _state.WriteStateAsync();
@@ -70,7 +70,7 @@ namespace Grains
             _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {this.GetPrimaryKeyString()}");
         }
 
-        private async ValueTask UpdateParams()
+        private async Task UpdateParams()
         {
             _pois.Clear();
             if (_state is not { State.Count: > 0 }) return;
@@ -82,6 +82,11 @@ namespace Grains
                 _pois.Add(poiState);
                 _logger.LogInformation($"Poi list information are just loaded to collection {this.GetPrimaryKeyString()}");
             };
+        }
+
+        public async Task<bool> PoiExists(long id)
+        {
+            return await Task.FromResult(_state.State.Contains(id));
         }
     }
 }

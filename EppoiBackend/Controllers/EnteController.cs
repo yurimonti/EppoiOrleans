@@ -110,5 +110,25 @@ namespace EppoiBackend.Controllers
             else return Unauthorized();
         }
 
+        [HttpDelete("{id}/poi/{poiId}")]
+        public async ValueTask<IActionResult> DeletePoi(Guid id, string poiId)
+        {
+            //Should be present a control over the ente city and the poi city (Open Route Service)
+            IEnteGrain enteGrain = _grainFactory.GetGrain<IEnteGrain>($"ente{id}");
+            EnteState enteState = await enteGrain.GetState();
+            if (IsAnEnte(enteState, id))
+            {
+                try
+                {
+                    await _poiService.DeletePoi(long.Parse(poiId));
+                    return Ok("Poi successfully deleted");
+                } catch(Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+                
+            }
+            else return Unauthorized();
+        }
     }
 }

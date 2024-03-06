@@ -25,6 +25,7 @@ builder.Host.UseOrleans(siloBuilder =>
     siloBuilder.AddRedisGrainStorageAsDefault(options =>
     {
         options.ConfigurationOptions = new ConfigurationOptions();
+        options.DeleteStateOnClear = true;
         options.ConfigurationOptions.EndPoints.Add("localhost", 6379);
     });
 });

@@ -38,7 +38,7 @@ namespace Grains
             _state.State.Add(id);
             await _state.WriteStateAsync();
             await UpdateParams();
-            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetGrainId} setted its state");
+            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetGrainId} set its state");
             _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {this.GetPrimaryKeyString()}");
         }
 
@@ -62,8 +62,8 @@ namespace Grains
             _state.State.Remove(id);
             await _state.WriteStateAsync();
             await UpdateParams();
-            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetGrainId} setted its state");
-            _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {this.GetPrimaryKeyString()}");
+            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetGrainId} set its state");
+            _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is set to {this.GetPrimaryKeyString()}");
         }
 
         private async Task UpdateParams()
@@ -79,6 +79,17 @@ namespace Grains
                 _logger.LogInformation($"Itinerary list information are just loaded to collection {this.GetPrimaryKeyString()}");
             };
         }
+
+        public async Task RemoveItinerariesWithPoi(long removedPoi)
+        {
+            List<long> itIDs =_itineraries.Where(it => it.Pois.Contains(removedPoi)).Select(it =>it.Id).ToList();
+            foreach (var it in itIDs)
+            {
+                var grain = GrainFactory.GetGrain<IItineraryGrain>($"itinerary{it}");
+                await grain.RemovePoi(removedPoi);
+            }
+        }
+
         //TODO: maybe is useless
         public async Task<bool> ItineraryExists(long id)
         {

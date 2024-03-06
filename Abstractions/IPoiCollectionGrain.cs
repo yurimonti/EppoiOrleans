@@ -8,9 +8,10 @@ namespace Abstractions
 {
     public interface IPoiCollectionGrain : IGrainWithStringKey
     {
-        ValueTask<List<long>> GetAllPoisIds();
-        ValueTask AddPoi(long id);
-        ValueTask RemovePoi(long id);
+        Task<List<long>> GetAllPoisIds();
+        Task AddPoi(long id);
+        Task RemovePoi(long id);
         Task<List<PoiState>> GetAllPois();
+        Task<bool> PoiExists(long id);
     }
 }

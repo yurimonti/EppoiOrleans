@@ -17,7 +17,7 @@ namespace Grains
         {
             _logger = logger;
             _state = state;
-            _pois = new List<PoiState>();
+            _pois = new();
         }
 
         public async Task<ItineraryState> GetState()
@@ -52,8 +52,8 @@ namespace Grains
             //_state.State.TimeToVisit = timeToVisit;
             await _state.WriteStateAsync();
             await UpdateItineraryParams();
-            _logger.LogInformation($"ItineraryGrain: {this.GetGrainId} setted its state");
-            _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {this.GetPrimaryKeyString()}");
+            _logger.LogInformation($"ItineraryGrain: {this.GetGrainId} sett its state");
+            _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is set to {this.GetPrimaryKeyString()}");
         }
 
         /**
@@ -88,5 +88,11 @@ namespace Grains
             _logger.LogInformation($"ItineraryGrain: {this.GetGrainId} states were just cleared");
         }
 
+        public async Task RemovePoi(long id)
+        {
+            _state.State.Pois.Remove(id);
+            await _state.WriteStateAsync();
+            await UpdateItineraryParams();
+        }
     }
 }

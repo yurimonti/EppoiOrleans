@@ -67,8 +67,15 @@ namespace EppoiBackend.Controllers
             UserState userState = await userGrain.GetState();
             if (IsAUser(userState, id))
             {
-                var poi = await _poiService.GetAPoi(long.Parse(poiId));
-                return Ok(poi);
+                try
+                {
+                    var poi = await _poiService.GetAPoi(long.Parse(poiId));
+                    return Ok(poi);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
             else return Unauthorized();
         }
@@ -110,7 +117,7 @@ namespace EppoiBackend.Controllers
         }
 
         [HttpPost("{id}/itinerary/")]
-        public async ValueTask<IActionResult> CreatePoi([FromBody] ItineraryStateDto state, Guid id)
+        public async ValueTask<IActionResult> CreateItinerary([FromBody] ItineraryStateDto state, Guid id)
         {
             //Should be present a control over the ente city and the poi city (Open Route Service)
             IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user{id}");
@@ -127,7 +134,7 @@ namespace EppoiBackend.Controllers
 
 
         [HttpPut("{id}/itinerary/{itineraryId}")]
-        public async ValueTask<IActionResult> UpdatePoi([FromBody] ItineraryStateDto state, Guid id, string itineraryId)
+        public async ValueTask<IActionResult> UpdateItinerary([FromBody] ItineraryStateDto state, Guid id, string itineraryId)
         {
             //Should be present a control over the ente city and the poi city (Open Route Service)
             IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user{id}");
@@ -140,5 +147,18 @@ namespace EppoiBackend.Controllers
             else return Unauthorized();
         }
 
+        [HttpDelete("{id}/itinerary/{itineraryId}")]
+        public async ValueTask<IActionResult> DeleteItinerary(Guid id, string itineraryId)
+        {
+            //Should be present a control over the ente city and the poi city (Open Route Service)
+            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user{id}");
+            UserState userState = await userGrain.GetState();
+            if (IsAUser(userState, id))
+            {
+                await _itineraryService.DeleteItinerary(long.Parse(itineraryId));
+                return Ok("itinerary successfully deleted");
+            }
+            else return Unauthorized();
+        }
     }
 }
