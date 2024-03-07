@@ -72,8 +72,16 @@ namespace EppoiBackend.Controllers
             EnteState enteState = await enteGrain.GetState();
             if (IsAnEnte(enteState, id))
             {
-                var poi = await _poiService.GetAPoi(long.Parse(poiId));
-                return Ok(poi);
+                try
+                {
+                    var poi = await _poiService.GetAPoi(long.Parse(poiId));
+                    return Ok(poi);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+
             }
             else return Unauthorized();
         }
@@ -86,26 +94,39 @@ namespace EppoiBackend.Controllers
             EnteState enteState = await enteGrain.GetState();
             if (IsAnEnte(enteState, id))
             {
-                PoiState stateToReturn = await _poiService.CreatePoi(state);
-                enteState.PoiIDs.Add(stateToReturn.Id);
-                await enteGrain.SetState(enteState.City, enteState.Username, enteState.PoiIDs);
-                return Ok(stateToReturn);
+                try
+                {
+                    PoiState stateToReturn = await _poiService.CreatePoi(state);
+                    enteState.PoiIDs.Add(stateToReturn.Id);
+                    await enteGrain.SetState(enteState.City, enteState.Username, enteState.PoiIDs);
+                    return Ok(stateToReturn);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
             else return Unauthorized();
         }
 
 
         [HttpPut("{id}/poi/{poiId}")]
-        public async ValueTask<IActionResult> UpdatePoi([FromBody] PoiStateDto state, Guid id,string poiId)
+        public async ValueTask<IActionResult> UpdatePoi([FromBody] PoiStateDto state, Guid id, string poiId)
         {
             //Should be present a control over the ente city and the poi city (Open Route Service)
             IEnteGrain enteGrain = _grainFactory.GetGrain<IEnteGrain>($"ente{id}");
             EnteState enteState = await enteGrain.GetState();
             if (IsAnEnte(enteState, id))
             {
-               
-                PoiStateDto stateToReturn = await _poiService.UpdatePoi(long.Parse(poiId),state);
-                return Ok(stateToReturn);
+                try
+                {
+                    PoiStateDto stateToReturn = await _poiService.UpdatePoi(long.Parse(poiId), state);
+                    return Ok(stateToReturn);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
             else return Unauthorized();
         }
@@ -122,11 +143,12 @@ namespace EppoiBackend.Controllers
                 {
                     await _poiService.DeletePoi(long.Parse(poiId));
                     return Ok("Poi successfully deleted");
-                } catch(Exception ex)
+                }
+                catch (Exception ex)
                 {
                     return BadRequest(ex.Message);
                 }
-                
+
             }
             else return Unauthorized();
         }

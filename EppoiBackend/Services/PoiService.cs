@@ -1,8 +1,5 @@
 ﻿using Abstractions;
 using EppoiBackend.Dtos;
-using Grains;
-using Orleans.Runtime;
-using System.Text.Json;
 
 namespace EppoiBackend.Services
 {
@@ -96,6 +93,5 @@ namespace EppoiBackend.Services
         {
             if (!await collectionGrain.PoiExists(idToCheck)) throw new ArgumentException($"Poi with id:{idToCheck} doesn't exist");
         }
-
     }
 }

@@ -110,7 +110,7 @@ namespace EppoiBackend.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return BadRequest(ex);
+                    return BadRequest(ex.Message);
                 }
             }
             else return Unauthorized();
@@ -124,10 +124,18 @@ namespace EppoiBackend.Controllers
             UserState userState = await userGrain.GetState();
             if (IsAUser(userState, id))
             {
-                ItineraryState stateToReturn = await _itineraryService.CreateItinerary(state);
-                userState.ItineraryIDs.Add(stateToReturn.Id);
-                await userGrain.SetState(userState.Username, userState.ItineraryIDs);
-                return Ok(stateToReturn);
+                try
+                {
+                    ItineraryState stateToReturn = await _itineraryService.CreateItinerary(state);
+                    userState.ItineraryIDs.Add(stateToReturn.Id);
+                    await userGrain.SetState(userState.Username, userState.ItineraryIDs);
+                    return Ok(stateToReturn);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+
             }
             else return Unauthorized();
         }
@@ -141,8 +149,15 @@ namespace EppoiBackend.Controllers
             UserState userState = await userGrain.GetState();
             if (IsAUser(userState, id))
             {
-                ItineraryStateDto stateToReturn = await _itineraryService.UpdateItinerary(long.Parse(itineraryId), state);
-                return Ok(stateToReturn);
+                try
+                {
+                    ItineraryStateDto stateToReturn = await _itineraryService.UpdateItinerary(long.Parse(itineraryId), state);
+                    return Ok(stateToReturn);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
             else return Unauthorized();
         }
@@ -155,8 +170,15 @@ namespace EppoiBackend.Controllers
             UserState userState = await userGrain.GetState();
             if (IsAUser(userState, id))
             {
-                await _itineraryService.DeleteItinerary(long.Parse(itineraryId));
-                return Ok("itinerary successfully deleted");
+                try
+                {
+                    await _itineraryService.DeleteItinerary(long.Parse(itineraryId));
+                    return Ok("itinerary successfully deleted");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
             else return Unauthorized();
         }

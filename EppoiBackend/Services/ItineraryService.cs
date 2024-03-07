@@ -26,7 +26,7 @@ namespace EppoiBackend.Services
             IItineraryCollectionGrain itineraryCollectionGrain = _grainFactory.GetGrain<IItineraryCollectionGrain>(ITINERARY_COLLECTION_ID);
             while (await itineraryCollectionGrain.ItineraryExists(idToSet))
             {
-                if (tries >= 10) throw new Exception("Lot of tries to find a valid id for a new itinerary");
+                if (tries >= 10) throw new TimeoutException("Lot of tries to find a valid id for a new itinerary");
                 idToSet = rnd.NextInt64();
                 tries++;
             }
@@ -38,9 +38,7 @@ namespace EppoiBackend.Services
 
         public async Task<List<ItineraryStateDto>> GetAllItineraries(Func<ItineraryStateDto, bool>? predicate)
         {
-            Console.WriteLine($"itinerary collection grain should be activated in a while");
             IItineraryCollectionGrain itineraryCollectionGrain = _grainFactory.GetGrain<IItineraryCollectionGrain>(ITINERARY_COLLECTION_ID);
-            Console.WriteLine($"itinerary collection grain has been activated");
             List<ItineraryState> itineraries = await itineraryCollectionGrain.GetAllItineraries();
             IEnumerable<ItineraryStateDto> toReturn = itineraries.Select(async ev => await ConvertToDto(ev))
                    .Select(t => t.Result)
