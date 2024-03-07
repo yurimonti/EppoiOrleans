@@ -22,9 +22,9 @@ namespace Grains
 
         public async Task<ItineraryState> GetState()
         {
+            await UpdateItineraryParams();
             ItineraryState state = _state.State;
             _logger.LogInformation($"The resulting state for {this.GetPrimaryKeyString()} is {JsonSerializer.Serialize(state)}");
-            await UpdateItineraryParams();
             return await ValueTask.FromResult(state);
         }
 
@@ -38,7 +38,7 @@ namespace Grains
         public override async Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
         {
             await UpdateItineraryParams();
-            _logger.LogInformation($"ItineraryGrain: {this.GetGrainId} was just activated");
+            _logger.LogInformation($"ItineraryGrain: {this.GetGrainId} was just deactivated");
             _pois.Clear();
             await base.OnDeactivateAsync(reason, cancellationToken);
         }
@@ -62,7 +62,11 @@ namespace Grains
         private async Task UpdateItineraryParams()
         {
             _pois.Clear();
-            if (_state is not { State.Pois.Count: > 0 }) return;
+            if (_state is not { State.Pois.Count: > 0 }) {
+                _state.State.TimeToVisit = 0;
+                await _state.WriteStateAsync();
+                return;
+            }
             foreach (var id in  _state.State.Pois)
             {
                 _logger.LogTrace("Id of poi ->", id);
@@ -72,6 +76,7 @@ namespace Grains
                 _logger.LogInformation($"Poi list information are just loaded to itinerary {this.GetPrimaryKeyString()}");
             };
             _state.State.TimeToVisit = _pois.Select(poi => poi.TimeToVisit).Sum();
+            await _state.WriteStateAsync();
             _logger.LogInformation($"Time To Visit is just updated for itinerary {this.GetPrimaryKeyString()}");
         }
 

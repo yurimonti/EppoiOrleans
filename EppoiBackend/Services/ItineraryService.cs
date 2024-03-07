@@ -1,5 +1,6 @@
 ﻿using Abstractions;
 using EppoiBackend.Dtos;
+using System.Text.Json;
 
 namespace EppoiBackend.Services
 {
@@ -9,17 +10,17 @@ namespace EppoiBackend.Services
         private readonly Random rnd = new();
         private readonly IGrainFactory _grainFactory;
         private static readonly string ITINERARY_COLLECTION_ID = "itinerary-collection";
-        private readonly IStateToDtoConverter<IItineraryGrain, ItineraryStateDto> _converter;
         private readonly IPoiService _poiService;
+        private readonly ILogger<IItineraryService> _logger;
 
-        public ItineraryService(IGrainFactory grainFactory, IStateToDtoConverter<IItineraryGrain, ItineraryStateDto> converter, IPoiService poiService)
+        public ItineraryService(IGrainFactory grainFactory, IPoiService poiService,ILogger<IItineraryService> logger)
         {
             _grainFactory = grainFactory;
-            _converter = converter;
             _poiService = poiService;
+            _logger = logger;
         }
         
-        public async Task<ItineraryState> CreateItinerary(ItineraryStateDto state)
+        public async Task<ItineraryState> CreateItinerary(ItineraryState state)
         {
             long idToSet = rnd.NextInt64();
             int tries = 0;
@@ -31,51 +32,62 @@ namespace EppoiBackend.Services
                 tries++;
             }
             IItineraryGrain itineraryGrain = _grainFactory.GetGrain<IItineraryGrain>($"itinerary{idToSet}");
-            await itineraryGrain.SetState(idToSet, state.Name, state.Description, state.Pois.Select(p => p.Id).ToList());
+            await itineraryGrain.SetState(idToSet, state.Name,state.Description,state.Pois);
             await itineraryCollectionGrain.AddItinerary(idToSet);
             return await itineraryGrain.GetState();
         }
 
-        public async Task<List<ItineraryStateDto>> GetAllItineraries(Func<ItineraryStateDto, bool>? predicate)
+        public async Task<List<ItineraryState>> GetAllItineraries(Func<ItineraryState, bool>? predicate)
         {
             IItineraryCollectionGrain itineraryCollectionGrain = _grainFactory.GetGrain<IItineraryCollectionGrain>(ITINERARY_COLLECTION_ID);
             List<ItineraryState> itineraries = await itineraryCollectionGrain.GetAllItineraries();
-            IEnumerable<ItineraryStateDto> toReturn = itineraries.Select(async ev => await ConvertToDto(ev))
-                   .Select(t => t.Result)
-                   .Where(i => i != null);
-            if(predicate != null)
-                toReturn = toReturn.Where(predicate);
+            IEnumerable<ItineraryState> toReturn = itineraries.AsEnumerable();
+            if (predicate != null)
+                toReturn = itineraries.Where(predicate);
             return toReturn.ToList();
         }
-        private async Task<ItineraryStateDto> ConvertToDto(ItineraryState itineraryState)
+
+        public async Task<ItineraryStateDto> ConvertToDto(ItineraryState itineraryState)
         {
-            List<PoiStateDto> poisToAdd = await _poiService.GetPois(itineraryState.Pois);
+            List<PoiState> poiStates = await _poiService.GetPois(itineraryState.Pois);
+            List<PoiStateDto> poiDTOs = _poiService.ConvertToDto(poiStates);
             return new ItineraryStateDto
             {
                 Name = itineraryState.Name,
                 Description = itineraryState.Description,
-                Pois = poisToAdd,
+                Pois = poiDTOs,
                 Id = itineraryState.Id,
                 TimeToVisit = (double)itineraryState.TimeToVisit
             };
         }
 
-        public async Task<ItineraryStateDto> GetAnItinerary(long itineraryID)
+        public async Task<List<ItineraryStateDto>> ConvertToDto(List<ItineraryState> itineraryStates)
+        {
+            List<ItineraryStateDto> toReturn = [];
+            foreach(var itineraryState in itineraryStates)
+            {
+                var toAdd = await ConvertToDto(itineraryState);
+                toReturn.Add(toAdd);
+            };
+            return toReturn;
+        }
+
+        public async Task<ItineraryState> GetAnItinerary(long itineraryID)
         {
             IItineraryCollectionGrain itineraryCollectionGrain = _grainFactory.GetGrain<IItineraryCollectionGrain>(ITINERARY_COLLECTION_ID);
             await ThrowExceptionIfItineraryNotExists(itineraryCollectionGrain, itineraryID);
             IItineraryGrain itGrain = _grainFactory.GetGrain<IItineraryGrain>($"itinerary{itineraryID}");
-            var itState = await itGrain.GetState();
-            return await ConvertToDto(itState);
+            var state =  await itGrain.GetState();
+            return state;
         }
 
-        public async Task<ItineraryStateDto> UpdateItinerary(long itineraryID, ItineraryStateDto state)
+        public async Task<ItineraryState> UpdateItinerary(long itineraryID, ItineraryState state)
         {
             IItineraryCollectionGrain itineraryCollectionGrain = _grainFactory.GetGrain<IItineraryCollectionGrain>(ITINERARY_COLLECTION_ID);
             await ThrowExceptionIfItineraryNotExists(itineraryCollectionGrain, itineraryID);
             IItineraryGrain itineraryGrain = _grainFactory.GetGrain<IItineraryGrain>($"itinerary{itineraryID}");
-            await itineraryGrain.SetState(itineraryID, state.Name, state.Description, state.Pois.Select(p => p.Id).ToList());
-            return await ConvertToDto(await itineraryGrain.GetState());
+            await itineraryGrain.SetState(itineraryID, state.Name, state.Description, state.Pois);
+            return await itineraryGrain.GetState();
         }
 
         public async Task DeleteItinerary(long id)

@@ -2,6 +2,7 @@
 using EppoiBackend.Dtos;
 using EppoiBackend.Services;
 using Microsoft.AspNetCore.Mvc;
+using OpenTelemetry.Trace;
 using System.Text.Json.Serialization;
 
 namespace EppoiBackend.Controllers
@@ -12,19 +13,18 @@ namespace EppoiBackend.Controllers
     {
         private readonly IPoiService _poiService;
         private readonly IItineraryService _itineraryService;
-        private readonly IStateToDtoConverter<IPoiGrain, PoiStateDto> _poiConverter;
-        private readonly IStateToDtoConverter<IItineraryGrain, ItineraryStateDto> _itineraryConverter;
         private readonly IGrainFactory _grainFactory;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(IPoiService poiService, IStateToDtoConverter<IPoiGrain, PoiStateDto> converter,
-            IGrainFactory grainFactory, IStateToDtoConverter<IItineraryGrain, ItineraryStateDto> itineraryConverter,
-            IItineraryService itineraryService)
+        public UserController(IPoiService poiService,
+            IGrainFactory grainFactory,
+            IItineraryService itineraryService,
+            ILogger<UserController> logger)
         {
             _poiService = poiService;
             _itineraryService = itineraryService;
-            _poiConverter = converter;
-            _itineraryConverter = itineraryConverter;
             _grainFactory = grainFactory;
+            _logger = logger;
         }
 
         public record UserInfo
@@ -52,7 +52,8 @@ namespace EppoiBackend.Controllers
             UserState state = await userGrain.GetState();
             if (IsAUser(state, id))
             {
-                var toReturn = await _poiService.GetAllPois();
+                var poiStates = await _poiService.GetAllPois();
+                var toReturn = _poiService.ConvertToDto(poiStates);
                 return Ok(toReturn);
             }
             else return Unauthorized();
@@ -69,8 +70,9 @@ namespace EppoiBackend.Controllers
             {
                 try
                 {
-                    var poi = await _poiService.GetAPoi(long.Parse(poiId));
-                    return Ok(poi);
+                    var poiState = await _poiService.GetAPoi(long.Parse(poiId));
+                    var toReturn = _poiService.ConvertToDto(poiState);
+                    return Ok(toReturn);
                 }
                 catch (Exception ex)
                 {
@@ -85,10 +87,11 @@ namespace EppoiBackend.Controllers
         {
             IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user{id}");
             UserState state = await userGrain.GetState();
-            Func<ItineraryStateDto, bool> function = (dto => state.ItineraryIDs.Contains(dto.Id));
+            Func<ItineraryState, bool> function = (it => state.ItineraryIDs.Contains(it.Id));
             if (IsAUser(state, id))
             {
-                var toReturn = await _itineraryService.GetAllItineraries(function);
+                List<ItineraryState> states = await _itineraryService.GetAllItineraries(function);
+                List<ItineraryStateDto> toReturn = await _itineraryService.ConvertToDto(states);
                 return Ok(toReturn);
             }
             else return Unauthorized();
@@ -106,7 +109,8 @@ namespace EppoiBackend.Controllers
                 try
                 {
                     var itinerary = await _itineraryService.GetAnItinerary(long.Parse(itineraryId));
-                    return Ok(itinerary);
+                    var toReturn = await _itineraryService.ConvertToDto(itinerary);
+                    return Ok(toReturn);
                 }
                 catch (Exception ex)
                 {
@@ -117,7 +121,7 @@ namespace EppoiBackend.Controllers
         }
 
         [HttpPost("{id}/itinerary/")]
-        public async ValueTask<IActionResult> CreateItinerary([FromBody] ItineraryStateDto state, Guid id)
+        public async ValueTask<IActionResult> CreateItinerary([FromBody] ItineraryState state, Guid id)
         {
             //Should be present a control over the ente city and the poi city (Open Route Service)
             IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user{id}");
@@ -129,7 +133,8 @@ namespace EppoiBackend.Controllers
                     ItineraryState stateToReturn = await _itineraryService.CreateItinerary(state);
                     userState.ItineraryIDs.Add(stateToReturn.Id);
                     await userGrain.SetState(userState.Username, userState.ItineraryIDs);
-                    return Ok(stateToReturn);
+                    var toReturn = await _itineraryService.ConvertToDto(stateToReturn);
+                    return Ok(toReturn);
                 }
                 catch (Exception ex)
                 {
@@ -142,7 +147,7 @@ namespace EppoiBackend.Controllers
 
 
         [HttpPut("{id}/itinerary/{itineraryId}")]
-        public async ValueTask<IActionResult> UpdateItinerary([FromBody] ItineraryStateDto state, Guid id, string itineraryId)
+        public async ValueTask<IActionResult> UpdateItinerary([FromBody] ItineraryState state, Guid id, string itineraryId)
         {
             //Should be present a control over the ente city and the poi city (Open Route Service)
             IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user{id}");
@@ -151,8 +156,9 @@ namespace EppoiBackend.Controllers
             {
                 try
                 {
-                    ItineraryStateDto stateToReturn = await _itineraryService.UpdateItinerary(long.Parse(itineraryId), state);
-                    return Ok(stateToReturn);
+                    ItineraryState stateToReturn = await _itineraryService.UpdateItinerary(long.Parse(itineraryId), state);
+                    var toReturn = await _itineraryService.ConvertToDto(stateToReturn);
+                    return Ok(toReturn);
                 }
                 catch (Exception ex)
                 {

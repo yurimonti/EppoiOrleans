@@ -6,13 +6,16 @@ namespace EppoiBackend.Services
     //TODO: change Dtos with state (also for classes that implement this interface)
     public interface IPoiService
     {
-        Task<PoiState> CreatePoi(PoiStateDto state);
-        Task<PoiStateDto> GetAPoi(long id);
+        Task<PoiState> CreatePoi(PoiState state);
+        Task<PoiState> GetAPoi(long id);
 
-        Task<List<PoiStateDto>> GetAllPois();
+        Task<List<PoiState>> GetAllPois();
 
-        Task<List<PoiStateDto>> GetPois(List<long> poiIDs);
-        Task<PoiStateDto> UpdatePoi(long poiID, PoiStateDto state);
+        Task<List<PoiState>> GetPois(List<long> poiIDs);
+        Task<PoiState> UpdatePoi(long poiID, PoiState state);
         Task DeletePoi(long id);
+        PoiStateDto ConvertToDto(PoiState state);
+        List<PoiStateDto> ConvertToDto(List<PoiState> states);
+
     }
 }

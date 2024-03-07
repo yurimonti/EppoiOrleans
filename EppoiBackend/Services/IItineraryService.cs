@@ -6,10 +6,12 @@ namespace EppoiBackend.Services
 {
     public interface IItineraryService
     {
-        Task<ItineraryState> CreateItinerary(ItineraryStateDto state);
+        Task<ItineraryState> CreateItinerary(ItineraryState state);
         Task DeleteItinerary(long id);
-        Task<List<ItineraryStateDto>> GetAllItineraries(Func<ItineraryStateDto, bool>? predicate);
-        Task<ItineraryStateDto> GetAnItinerary(long itineraryID);
-        Task<ItineraryStateDto> UpdateItinerary(long itineraryID, ItineraryStateDto state);
+        Task<List<ItineraryState>> GetAllItineraries(Func<ItineraryState, bool>? predicate);
+        Task<ItineraryState> GetAnItinerary(long itineraryID);
+        Task<ItineraryState> UpdateItinerary(long itineraryID, ItineraryState state);
+        Task<ItineraryStateDto> ConvertToDto(ItineraryState itineraryState);
+        Task<List<ItineraryStateDto>> ConvertToDto(List<ItineraryState> itineraryStates);
     }
 }

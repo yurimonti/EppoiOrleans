@@ -10,16 +10,14 @@ namespace EppoiBackend.Services
         private readonly IGrainFactory _grainFactory;
         private static readonly string POI_COLLECTION_ID = "poi-collection";
         private static readonly string ITINERARY_COLLECTION_ID = "itinerary-collection";
-        private readonly IStateToDtoConverter<IPoiGrain, PoiStateDto> _converter;
 
 
-        public PoiService(IGrainFactory grainFactory, IStateToDtoConverter<IPoiGrain, PoiStateDto> converter)
+        public PoiService(IGrainFactory grainFactory)
         {
             _grainFactory = grainFactory;
-            _converter = converter;
         }
 
-        public async Task<PoiState> CreatePoi(PoiStateDto state)
+        public async Task<PoiState> CreatePoi(PoiState state)
         {
             long idToSet = rnd.NextInt64();
             int tries = 0;
@@ -36,21 +34,20 @@ namespace EppoiBackend.Services
             return await poiGrain.GetPoiState();
         }
 
-        public async Task<PoiStateDto> GetAPoi(long id)
+        public async Task<PoiState> GetAPoi(long id)
         {
             await ThrowExceptionIfPoiNotExists(_grainFactory.GetGrain<IPoiCollectionGrain>(POI_COLLECTION_ID), id);
             IPoiGrain poiGrain = _grainFactory.GetGrain<IPoiGrain>($"poi{id}");
-            return await _converter.ConvertToDto(poiGrain);
+            return await poiGrain.GetPoiState();
         }
 
-        public async Task<List<PoiStateDto>> GetAllPois()
+        public async Task<List<PoiState>> GetAllPois()
         {
             IPoiCollectionGrain poiCollectionGrain = _grainFactory.GetGrain<IPoiCollectionGrain>(POI_COLLECTION_ID);
-            List<PoiState> pois = await poiCollectionGrain.GetAllPois();
-            return pois.Select(ConvertToDto).ToList();
+            return await poiCollectionGrain.GetAllPois();
         }
 
-        private PoiStateDto ConvertToDto(PoiState poiState)
+        public PoiStateDto ConvertToDto(PoiState poiState)
         {
             return new PoiStateDto
             {
@@ -62,20 +59,29 @@ namespace EppoiBackend.Services
                 TimeToVisit = poiState.TimeToVisit
             };
         }
-
-        public async Task<List<PoiStateDto>> GetPois(List<long> poiIDs)
+        public List<PoiStateDto> ConvertToDto(List<PoiState> poiStates)
         {
-            List<PoiStateDto> dtos = await GetAllPois();
+            List<PoiStateDto> toReturn = new ();
+            poiStates.ForEach(poi =>
+            {
+                toReturn.Add(ConvertToDto(poi));
+            });
+            return toReturn;
+        }
+
+        public async Task<List<PoiState>> GetPois(List<long> poiIDs)
+        {
+            List<PoiState> dtos = await GetAllPois();
             var toReturn = dtos.Where(dto => poiIDs.Contains(dto.Id)).ToList();
             return toReturn;
         }
 
-        public async Task<PoiStateDto> UpdatePoi(long poiID, PoiStateDto state)
+        public async Task<PoiState> UpdatePoi(long poiID, PoiState state)
         {
             await ThrowExceptionIfPoiNotExists(_grainFactory.GetGrain<IPoiCollectionGrain>(POI_COLLECTION_ID), poiID);
             IPoiGrain poiGrain = _grainFactory.GetGrain<IPoiGrain>($"poi{poiID}");
             await poiGrain.SetState(poiID, state.Name, state.Description, state.Address, state.TimeToVisit, state.Coords);
-            return await _converter.ConvertToDto(poiGrain);
+            return await poiGrain.GetPoiState();
         }
 
         public async Task DeletePoi(long id)

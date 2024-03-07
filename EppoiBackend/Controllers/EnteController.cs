@@ -16,7 +16,6 @@ namespace EppoiBackend.Controllers
     public class EnteController : ControllerBase
     {
         private readonly IPoiService _poiService;
-        private readonly IStateToDtoConverter<IPoiGrain, PoiStateDto> _converter;
         private readonly IGrainFactory _grainFactory;
 
         public record EnteInfo
@@ -27,10 +26,9 @@ namespace EppoiBackend.Controllers
             public string City { get; set; }
         }
 
-        public EnteController(IPoiService poiService, IStateToDtoConverter<IPoiGrain, PoiStateDto> converter, IGrainFactory grainFactory)
+        public EnteController(IPoiService poiService, IGrainFactory grainFactory)
         {
             _poiService = poiService;
-            _converter = converter;
             _grainFactory = grainFactory;
         }
 
@@ -57,7 +55,8 @@ namespace EppoiBackend.Controllers
             if (IsAnEnte(state, id))
             {
                 List<long> entePois = state.PoiIDs;
-                var toReturn = await _poiService.GetPois(entePois);
+                var poiStates = await _poiService.GetPois(entePois);
+                var toReturn = _poiService.ConvertToDto(poiStates);
                 return Ok(toReturn);
             }
             else return Unauthorized();
@@ -75,7 +74,8 @@ namespace EppoiBackend.Controllers
                 try
                 {
                     var poi = await _poiService.GetAPoi(long.Parse(poiId));
-                    return Ok(poi);
+                    var toReturn = _poiService.ConvertToDto(poi);
+                    return Ok(toReturn);
                 }
                 catch (Exception ex)
                 {
@@ -87,7 +87,7 @@ namespace EppoiBackend.Controllers
         }
 
         [HttpPost("{id}/poi/")]
-        public async ValueTask<IActionResult> CreatePoi([FromBody] PoiStateDto state, Guid id)
+        public async ValueTask<IActionResult> CreatePoi([FromBody] PoiState state, Guid id)
         {
             //Should be present a control over the ente city and the poi city (Open Route Service)
             IEnteGrain enteGrain = _grainFactory.GetGrain<IEnteGrain>($"ente{id}");
@@ -99,7 +99,7 @@ namespace EppoiBackend.Controllers
                     PoiState stateToReturn = await _poiService.CreatePoi(state);
                     enteState.PoiIDs.Add(stateToReturn.Id);
                     await enteGrain.SetState(enteState.City, enteState.Username, enteState.PoiIDs);
-                    return Ok(stateToReturn);
+                    return Ok(_poiService.ConvertToDto(stateToReturn));
                 }
                 catch (Exception ex)
                 {
@@ -111,7 +111,7 @@ namespace EppoiBackend.Controllers
 
 
         [HttpPut("{id}/poi/{poiId}")]
-        public async ValueTask<IActionResult> UpdatePoi([FromBody] PoiStateDto state, Guid id, string poiId)
+        public async ValueTask<IActionResult> UpdatePoi([FromBody] PoiState state, Guid id, string poiId)
         {
             //Should be present a control over the ente city and the poi city (Open Route Service)
             IEnteGrain enteGrain = _grainFactory.GetGrain<IEnteGrain>($"ente{id}");
@@ -120,8 +120,9 @@ namespace EppoiBackend.Controllers
             {
                 try
                 {
-                    PoiStateDto stateToReturn = await _poiService.UpdatePoi(long.Parse(poiId), state);
-                    return Ok(stateToReturn);
+                    PoiState stateToReturn = await _poiService.UpdatePoi(long.Parse(poiId), state);
+                    var toReturn = _poiService.ConvertToDto(stateToReturn);
+                    return Ok(toReturn);
                 }
                 catch (Exception ex)
                 {
