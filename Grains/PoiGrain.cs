@@ -1,5 +1,6 @@
 ﻿using Abstractions;
 using Microsoft.Extensions.Logging;
+using Orleans;
 using Orleans.Runtime;
 using System.Text.Json;
 
@@ -8,6 +9,7 @@ namespace Grains
     public class PoiGrain : Grain, IPoiGrain
     {
         private readonly ILogger<IPoiGrain> _logger;
+        private static readonly string POI_COLLECTION_ID = "poi-collection";
         private readonly IPersistentState<PoiState> _state;
 
         public PoiGrain(ILogger<IPoiGrain> logger,
@@ -20,17 +22,17 @@ namespace Grains
 
         public override Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"PoiGrain: {this.GetGrainId} was just activated");
+            _logger.LogInformation($"PoiGrain: {this.GetPrimaryKeyString()} was just activated");
             return base.OnActivateAsync(cancellationToken);
         }
 
         public override Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"PoiGrain: {this.GetGrainId} was just deactivated");
+            _logger.LogInformation($"PoiGrain: {this.GetPrimaryKeyString()} was just deactivated");
             return base.OnDeactivateAsync(reason, cancellationToken);
         }
 
-        public async Task<PoiState> GetPoiState()
+        public async Task<PoiState> GetState()
         {
             PoiState state = _state.State;
             _logger.LogInformation($"PoiGrain: {this.GetGrainId} retrieved its state");
@@ -38,23 +40,25 @@ namespace Grains
             return await ValueTask.FromResult(state);
         }
 
-        public async Task SetState(long id,string name, string description, string address, double timeToVisit, Coordinate coordinate)
+        public async Task<PoiState> SetState(string name, string description, string address, double timeToVisit, Coordinate coordinate)
         {
-            _state.State.Name = name;
-            _state.State.Address = address;
-            _state.State.Id = id;
-            _state.State.Description = description;
-            _state.State.TimeToVisit = timeToVisit;
-            _state.State.Coords = coordinate;
+            PoiState toSet = new() { Id = GetPoiIdFromGrainStringKey(), Name = name, Description = description, Address = address, TimeToVisit = timeToVisit, Coords = coordinate };
+            _state.State = toSet;
             await _state.WriteStateAsync();
-            _logger.LogInformation($"PoiGrain: {this.GetGrainId} setted its state");
+            _logger.LogInformation($"PoiGrain: {this.GetPrimaryKeyString()} setted its state");
             _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {this.GetPrimaryKeyString()}");
+            return toSet;
         }
 
         public async Task ClearState()
         {
             await _state.ClearStateAsync();
-            _logger.LogInformation($"PoiGrain: {this.GetGrainId} state was just cleared");
+            _logger.LogInformation($"PoiGrain: {this.GetPrimaryKeyString()} state was just cleared");
+        }
+
+        private long GetPoiIdFromGrainStringKey()
+        {
+            return long.Parse(this.GetPrimaryKeyString().Split("/")[1]);
         }
     }
 }

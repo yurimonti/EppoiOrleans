@@ -27,14 +27,14 @@ namespace Grains
 
         public override async Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"PoiCollectionGrain: {this.GetGrainId} was just activated");
+            _logger.LogInformation($"PoiCollectionGrain: {this.GetPrimaryKeyString()} was just activated");
             await UpdateParams();
             await base.OnActivateAsync(cancellationToken);
         }
 
         public override Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"PoiCollectionGrain: {this.GetGrainId} was just deactivated");
+            _logger.LogInformation($"PoiCollectionGrain: {this.GetPrimaryKeyString()} was just deactivated");
             return base.OnDeactivateAsync(reason, cancellationToken);
         }
 
@@ -43,20 +43,20 @@ namespace Grains
             _state.State.Add(id);
             await _state.WriteStateAsync();
             await UpdateParams();
-            _logger.LogInformation($"PoiCollectionGrain: {this.GetGrainId} setted its state");
+            _logger.LogInformation($"PoiCollectionGrain: {this.GetPrimaryKeyString()} setted its state");
             _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {this.GetPrimaryKeyString()}");
         }
 
         public async Task<List<long>> GetAllPoisIds()
         {
-            _logger.LogInformation($"PoiCollectionGrain: {this.GetGrainId} retrieved its state");
+            _logger.LogInformation($"PoiCollectionGrain: {this.GetPrimaryKeyString()} retrieved its state");
             _logger.LogInformation($"The resulting state for {this.GetPrimaryKeyString()} is {JsonSerializer.Serialize(_state.State)}");
             return await Task.FromResult(_state.State);
         }
 
         public async Task<List<PoiState>> GetAllPois()
         {
-            _logger.LogInformation($"PoiCollectionGrain: {this.GetGrainId} retrieved its local not persistent state");
+            _logger.LogInformation($"PoiCollectionGrain: {this.GetPrimaryKeyString()} retrieved its local not persistent state");
             _logger.LogInformation($"The resulting not persistent state for {this.GetPrimaryKeyString()} is {JsonSerializer.Serialize(_pois)}");
             return await Task.FromResult(_pois);
         }
@@ -66,7 +66,7 @@ namespace Grains
             _state.State.Remove(id);
             await _state.WriteStateAsync();
             await UpdateParams();
-            _logger.LogInformation($"PoiCollectionGrain: {this.GetGrainId} setted its state");
+            _logger.LogInformation($"PoiCollectionGrain: {this.GetPrimaryKeyString()} setted its state");
             _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {this.GetPrimaryKeyString()}");
         }
 
@@ -77,8 +77,8 @@ namespace Grains
             foreach (var id in _state.State)
             {
                 _logger.LogTrace("Id of poi ->", id);
-                IPoiGrain poiGrain = GrainFactory.GetGrain<IPoiGrain>($"poi{id}");
-                PoiState poiState = await poiGrain.GetPoiState();
+                IPoiGrain poiGrain = GrainFactory.GetGrain<IPoiGrain>($"poi/{id}");
+                PoiState poiState = await poiGrain.GetState();
                 _pois.Add(poiState);
                 _logger.LogInformation($"Poi list information are just loaded to collection {this.GetPrimaryKeyString()}");
             };

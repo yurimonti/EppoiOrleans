@@ -6,7 +6,7 @@ namespace EppoiBackend.Dtos
     {
         public async Task<PoiStateDto> ConvertToDto(IPoiGrain grain)
         {
-            var state = await grain.GetPoiState();
+            var state = await grain.GetState();
             return new PoiStateDto
             {
                 Name = state.Name,

@@ -31,29 +31,40 @@ namespace Grains
         public override async Task OnActivateAsync(CancellationToken cancellationToken)
         {
             await UpdateItineraryParams();
-            _logger.LogInformation($"ItineraryGrain: {this.GetGrainId} was just activated");
+            _logger.LogInformation($"ItineraryGrain: {this.GetPrimaryKeyString()} was just activated");
             await base.OnActivateAsync(cancellationToken);
         }
 
         public override async Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
         {
             await UpdateItineraryParams();
-            _logger.LogInformation($"ItineraryGrain: {this.GetGrainId} was just deactivated");
+            _logger.LogInformation($"ItineraryGrain: {this.GetPrimaryKeyString()} was just deactivated");
             _pois.Clear();
             await base.OnDeactivateAsync(reason, cancellationToken);
         }
 
-        public async Task SetState(long? id, string name, string description, List<long> pois)
+        public async Task<ItineraryState> SetState(string name, string description, List<long> pois)
         {
-            _state.State.Name = name;
-            _state.State.Pois = pois;
-            if(id != null) _state.State.Id = (long)id;
-            _state.State.Description = description;
-            //_state.State.TimeToVisit = timeToVisit;
+            _state.State = new() { Id = GetPoiIdFromGrainStringKey(), Name = name, Description = description, Pois = pois };
             await _state.WriteStateAsync();
             await UpdateItineraryParams();
-            _logger.LogInformation($"ItineraryGrain: {this.GetGrainId} sett its state");
+            _logger.LogInformation($"ItineraryGrain: {this.GetPrimaryKeyString()} sett its state");
             _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is set to {this.GetPrimaryKeyString()}");
+            return _state.State;
+        }
+
+        public async Task<List<PoiState>> GetPois()
+        {
+            _logger.LogInformation($"ItineraryGrain: {this.GetPrimaryKeyString()} retrieved its local not persistent state");
+            _logger.LogInformation($"The resulting not persistent state for {this.GetPrimaryKeyString()} is {JsonSerializer.Serialize(_pois)}");
+            return await Task.FromResult(_pois);
+        }
+
+        public async Task ClearState()
+        {
+            _pois.Clear();
+            await _state.ClearStateAsync();
+            _logger.LogInformation($"ItineraryGrain: {this.GetPrimaryKeyString()} states were just cleared");
         }
 
         /**
@@ -62,16 +73,17 @@ namespace Grains
         private async Task UpdateItineraryParams()
         {
             _pois.Clear();
-            if (_state is not { State.Pois.Count: > 0 }) {
+            if (_state is not { State.Pois.Count: > 0 })
+            {
                 _state.State.TimeToVisit = 0;
                 await _state.WriteStateAsync();
                 return;
             }
-            foreach (var id in  _state.State.Pois)
+            foreach (var id in _state.State.Pois)
             {
                 _logger.LogTrace("Id of poi ->", id);
-                IPoiGrain poiGrain = GrainFactory.GetGrain<IPoiGrain>($"poi{id}");
-                PoiState poiState = await poiGrain.GetPoiState();
+                IPoiGrain poiGrain = GrainFactory.GetGrain<IPoiGrain>($"poi/{id}");
+                PoiState poiState = await poiGrain.GetState();
                 _pois.Add(poiState);
                 _logger.LogInformation($"Poi list information are just loaded to itinerary {this.GetPrimaryKeyString()}");
             };
@@ -80,24 +92,10 @@ namespace Grains
             _logger.LogInformation($"Time To Visit is just updated for itinerary {this.GetPrimaryKeyString()}");
         }
 
-        public async Task<List<PoiState>> GetPois()
+        private long GetPoiIdFromGrainStringKey()
         {
-            _logger.LogInformation($"ItineraryGrain: {this.GetGrainId} retrieved its local not persistent state");
-            _logger.LogInformation($"The resulting not persistent state for {this.GetPrimaryKeyString()} is {JsonSerializer.Serialize(_pois)}");
-            return await Task.FromResult(_pois);
-        }
-        public async Task ClearState()
-        {
-            _pois.Clear();
-            await _state.ClearStateAsync();
-            _logger.LogInformation($"ItineraryGrain: {this.GetGrainId} states were just cleared");
+            return long.Parse(this.GetPrimaryKeyString().Split("/")[1]);
         }
 
-        public async Task RemovePoi(long id)
-        {
-            _state.State.Pois.Remove(id);
-            await _state.WriteStateAsync();
-            await UpdateItineraryParams();
-        }
     }
 }

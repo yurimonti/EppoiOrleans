@@ -22,14 +22,14 @@ namespace Grains
 
         public override async Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetGrainId} was just activated");
+            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetPrimaryKeyString()} was just activated");
             await UpdateParams();
             await base.OnActivateAsync(cancellationToken);
         }
 
         public override Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetGrainId} was just deactivated");
+            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetPrimaryKeyString()} was just deactivated");
             return base.OnDeactivateAsync(reason, cancellationToken);
         }
 
@@ -38,13 +38,13 @@ namespace Grains
             _state.State.Add(id);
             await _state.WriteStateAsync();
             await UpdateParams();
-            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetGrainId} set its state");
+            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetPrimaryKeyString()} set its state");
             _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {this.GetPrimaryKeyString()}");
         }
 
         public async Task<List<long>> GetAllItineraryIds()
         {
-            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetGrainId} retrieved its state");
+            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetPrimaryKeyString()} retrieved its state");
             _logger.LogInformation($"The resulting state for {this.GetPrimaryKeyString()} is {JsonSerializer.Serialize(_state.State)}");
             return await Task.FromResult(_state.State);
         }
@@ -52,7 +52,7 @@ namespace Grains
         public async Task<List<ItineraryState>> GetAllItineraries()
         {
             var result = await Task.FromResult(_itineraries);
-            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetGrainId} retrivied its local not persistent state");
+            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetPrimaryKeyString()} retrivied its local not persistent state");
             _logger.LogInformation($"The resulting not persistent state for {this.GetPrimaryKeyString()} is {JsonSerializer.Serialize(_itineraries)}");
             return result;
         }
@@ -62,7 +62,7 @@ namespace Grains
             _state.State.Remove(id);
             await _state.WriteStateAsync();
             await UpdateParams();
-            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetGrainId} set its state");
+            _logger.LogInformation($"ItineraryCollectionGrain: {this.GetPrimaryKeyString()} set its state");
             _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is set to {this.GetPrimaryKeyString()}");
         }
 
@@ -73,7 +73,7 @@ namespace Grains
             foreach (var id in _state.State)
             {
                 _logger.LogTrace("Id of itinerary ->", id);
-                IItineraryGrain itineraryGrain = GrainFactory.GetGrain<IItineraryGrain>($"itinerary{id}");
+                IItineraryGrain itineraryGrain = GrainFactory.GetGrain<IItineraryGrain>($"itinerary/{id}");
                 ItineraryState itineraryState = await itineraryGrain.GetState();
                 _itineraries.Add(itineraryState);
                 _logger.LogInformation($"Itinerary list information are just loaded to collection {this.GetPrimaryKeyString()}");
@@ -85,8 +85,10 @@ namespace Grains
             List<long> itIDs =_itineraries.Where(it => it.Pois.Contains(removedPoi)).Select(it =>it.Id).ToList();
             foreach (var it in itIDs)
             {
-                var grain = GrainFactory.GetGrain<IItineraryGrain>($"itinerary{it}");
-                await grain.RemovePoi(removedPoi);
+                var grain = GrainFactory.GetGrain<IItineraryGrain>($"itinerary/{it}");
+                ItineraryState state = await grain.GetState();
+                state.Pois.Remove(removedPoi);
+                await grain.SetState(state.Name,state.Description,state.Pois);
             }
         }
 

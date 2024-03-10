@@ -39,8 +39,8 @@ namespace EppoiBackend.Controllers
         public async ValueTask<IActionResult> SignUp([FromBody] UserInfo userInfo)
         {
             Guid id = Guid.NewGuid();
-            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user{id}");
-            await userGrain.SetState(id, userInfo.Username, new List<long>());
+            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user/{id}");
+            await userGrain.SetState(userInfo.Username, new List<long>());
             UserState state = await userGrain.GetState();
             return Ok(state);
         }
@@ -48,11 +48,11 @@ namespace EppoiBackend.Controllers
         [HttpGet("{id}/poi")]
         public async ValueTask<IActionResult> GetPois(Guid id)
         {
-            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user{id}");
+            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user/{id}");
             UserState state = await userGrain.GetState();
             if (IsAUser(state, id))
             {
-                var poiStates = await _poiService.GetAllPois();
+                var poiStates = await userGrain.GetPois();
                 var toReturn = _poiService.ConvertToDto(poiStates);
                 return Ok(toReturn);
             }
@@ -64,13 +64,13 @@ namespace EppoiBackend.Controllers
         {
             //TODO:returns ente pois instead the whole state of an ente
             //PoiStateDto stateDtos = await _poiService.GetAPoi(long.Parse(poiId));
-            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user{id}");
+            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user/{id}");
             UserState userState = await userGrain.GetState();
             if (IsAUser(userState, id))
             {
                 try
                 {
-                    var poiState = await _poiService.GetAPoi(long.Parse(poiId));
+                    var poiState = await userGrain.GetPoiState(long.Parse(poiId));
                     var toReturn = _poiService.ConvertToDto(poiState);
                     return Ok(toReturn);
                 }
@@ -83,14 +83,14 @@ namespace EppoiBackend.Controllers
         }
 
         [HttpGet("{id}/itinerary")]
-        public async ValueTask<IActionResult> GetItineraries(Guid id)
+        public async ValueTask<IActionResult> GetItineraries(Guid id, [FromQuery] bool mineOnly)
         {
-            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user{id}");
+            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user/{id}");
             UserState state = await userGrain.GetState();
             Func<ItineraryState, bool> function = (it => state.ItineraryIDs.Contains(it.Id));
             if (IsAUser(state, id))
             {
-                List<ItineraryState> states = await _itineraryService.GetAllItineraries(function);
+                List<ItineraryState> states = await userGrain.GetItineraries(mineOnly);
                 List<ItineraryStateDto> toReturn = await _itineraryService.ConvertToDto(states);
                 return Ok(toReturn);
             }
@@ -102,13 +102,13 @@ namespace EppoiBackend.Controllers
         {
             //TODO:returns ente pois instead the whole state of an ente
             //PoiStateDto stateDtos = await _poiService.GetAPoi(long.Parse(poiId));
-            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user{id}");
+            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user/{id}");
             UserState userState = await userGrain.GetState();
             if (IsAUser(userState, id))
             {
                 try
                 {
-                    var itinerary = await _itineraryService.GetAnItinerary(long.Parse(itineraryId));
+                    var itinerary = await userGrain.GetItineraryState(long.Parse(itineraryId));
                     var toReturn = await _itineraryService.ConvertToDto(itinerary);
                     return Ok(toReturn);
                 }
@@ -124,13 +124,13 @@ namespace EppoiBackend.Controllers
         public async ValueTask<IActionResult> CreateItinerary([FromBody] ItineraryState state, Guid id)
         {
             //Should be present a control over the ente city and the poi city (Open Route Service)
-            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user{id}");
+            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user/{id}");
             UserState userState = await userGrain.GetState();
             if (IsAUser(userState, id))
             {
                 try
                 {
-                    ItineraryState stateToReturn = await _itineraryService.CreateItinerary(state);
+                    ItineraryState stateToReturn = await userGrain.CreateItinerary(state);
                     userState.ItineraryIDs.Add(stateToReturn.Id);
                     await userGrain.SetState(userState.Username, userState.ItineraryIDs);
                     var toReturn = await _itineraryService.ConvertToDto(stateToReturn);
@@ -150,13 +150,13 @@ namespace EppoiBackend.Controllers
         public async ValueTask<IActionResult> UpdateItinerary([FromBody] ItineraryState state, Guid id, string itineraryId)
         {
             //Should be present a control over the ente city and the poi city (Open Route Service)
-            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user{id}");
+            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user/{id}");
             UserState userState = await userGrain.GetState();
             if (IsAUser(userState, id))
             {
                 try
                 {
-                    ItineraryState stateToReturn = await _itineraryService.UpdateItinerary(long.Parse(itineraryId), state);
+                    ItineraryState stateToReturn = await userGrain.UpdateItinerary(state,long.Parse(itineraryId));
                     var toReturn = await _itineraryService.ConvertToDto(stateToReturn);
                     return Ok(toReturn);
                 }
@@ -172,13 +172,13 @@ namespace EppoiBackend.Controllers
         public async ValueTask<IActionResult> DeleteItinerary(Guid id, string itineraryId)
         {
             //Should be present a control over the ente city and the poi city (Open Route Service)
-            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user{id}");
+            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user/{id}");
             UserState userState = await userGrain.GetState();
             if (IsAUser(userState, id))
             {
                 try
                 {
-                    await _itineraryService.DeleteItinerary(long.Parse(itineraryId));
+                    await userGrain.RemoveItinerary(long.Parse(itineraryId));
                     return Ok("itinerary successfully deleted");
                 }
                 catch (Exception ex)

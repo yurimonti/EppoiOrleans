@@ -3,9 +3,8 @@
     public interface IItineraryGrain : IGrainWithStringKey
     {
         Task<ItineraryState> GetState();
-        Task SetState(long? id, string name, string description, List<long> pois);
+        Task<ItineraryState> SetState(string name, string description, List<long> pois);
         Task<List<PoiState>> GetPois();
-        Task RemovePoi(long id);
         Task ClearState();
     }
 }
