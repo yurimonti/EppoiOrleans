@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EppoiBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+27d595c70084b54baf06790368e9860e3e949172")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fedda1012b8d5bd2f2f3e9c998cae87488d4069f")]
 [assembly: System.Reflection.AssemblyProductAttribute("EppoiBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EppoiBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

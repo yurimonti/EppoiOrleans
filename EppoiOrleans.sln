@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grains", "Grains\Grains.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EppoiBackend", "EppoiBackend\EppoiBackend.csproj", "{32F93FBA-A460-495E-A8BC-121CE2A4D4A0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EppoiBackend.Tests", "EppoiBackend.Tests\EppoiBackend.Tests.csproj", "{BA37B4D0-2775-4CB6-AE4C-FEB3D60156D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{32F93FBA-A460-495E-A8BC-121CE2A4D4A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32F93FBA-A460-495E-A8BC-121CE2A4D4A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32F93FBA-A460-495E-A8BC-121CE2A4D4A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA37B4D0-2775-4CB6-AE4C-FEB3D60156D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA37B4D0-2775-4CB6-AE4C-FEB3D60156D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA37B4D0-2775-4CB6-AE4C-FEB3D60156D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA37B4D0-2775-4CB6-AE4C-FEB3D60156D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
