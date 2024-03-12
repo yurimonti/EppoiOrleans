@@ -83,14 +83,14 @@ namespace EppoiBackend.Controllers
         }
 
         [HttpGet("{id}/itinerary")]
-        public async ValueTask<IActionResult> GetItineraries(Guid id)
+        public async ValueTask<IActionResult> GetItineraries(Guid id, [FromQuery] bool mineOnly)
         {
             IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user{id}");
             UserState state = await userGrain.GetState();
             Func<ItineraryState, bool> function = (it => state.ItineraryIDs.Contains(it.Id));
             if (IsAUser(state, id))
             {
-                List<ItineraryState> states = await _itineraryService.GetAllItineraries(function);
+                List<ItineraryState> states = mineOnly ? await _itineraryService.GetAllItineraries(function) : await _itineraryService.GetAllItineraries(null);
                 List<ItineraryStateDto> toReturn = await _itineraryService.ConvertToDto(states);
                 return Ok(toReturn);
             }
@@ -104,7 +104,7 @@ namespace EppoiBackend.Controllers
             //PoiStateDto stateDtos = await _poiService.GetAPoi(long.Parse(poiId));
             IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user{id}");
             UserState userState = await userGrain.GetState();
-            if (IsAUser(userState, id))
+            if (IsAUser(userState, id) && UserHasThatItinerary(userState, long.Parse(itineraryId)))
             {
                 try
                 {
@@ -152,7 +152,7 @@ namespace EppoiBackend.Controllers
             //Should be present a control over the ente city and the poi city (Open Route Service)
             IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user{id}");
             UserState userState = await userGrain.GetState();
-            if (IsAUser(userState, id))
+            if (IsAUser(userState, id) && UserHasThatItinerary(userState, long.Parse(itineraryId)))
             {
                 try
                 {
@@ -174,7 +174,7 @@ namespace EppoiBackend.Controllers
             //Should be present a control over the ente city and the poi city (Open Route Service)
             IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user{id}");
             UserState userState = await userGrain.GetState();
-            if (IsAUser(userState, id))
+            if (IsAUser(userState, id) && UserHasThatItinerary(userState, long.Parse(itineraryId)));
             {
                 try
                 {
@@ -187,6 +187,11 @@ namespace EppoiBackend.Controllers
                 }
             }
             else return Unauthorized();
+        }
+
+        private bool UserHasThatItinerary(UserState owner, long toCheck)
+        {
+            return owner.ItineraryIDs.Contains(toCheck);
         }
     }
 }

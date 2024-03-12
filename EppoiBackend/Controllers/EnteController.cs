@@ -48,14 +48,20 @@ namespace EppoiBackend.Controllers
         }
 
         [HttpGet("{id}/poi")]
-        public async ValueTask<IActionResult> GetPois(Guid id)
+        public async ValueTask<IActionResult> GetPois(Guid id, [FromQuery] bool mineOnly)
         {
             IEnteGrain enteGrain = _grainFactory.GetGrain<IEnteGrain>($"ente{id}");
             EnteState state = await enteGrain.GetState();
             if (IsAnEnte(state, id))
             {
-                List<long> entePois = state.PoiIDs;
-                var poiStates = await _poiService.GetPois(entePois);
+                List<PoiState> poiStates = [];
+                if (mineOnly)
+                {
+                    List<long> entePois = state.PoiIDs;
+                    poiStates = await _poiService.GetPois(entePois);
+                }
+                else poiStates = await _poiService.GetAllPois();
+
                 var toReturn = _poiService.ConvertToDto(poiStates);
                 return Ok(toReturn);
             }
@@ -116,7 +122,7 @@ namespace EppoiBackend.Controllers
             //Should be present a control over the ente city and the poi city (Open Route Service)
             IEnteGrain enteGrain = _grainFactory.GetGrain<IEnteGrain>($"ente{id}");
             EnteState enteState = await enteGrain.GetState();
-            if (IsAnEnte(enteState, id))
+            if (IsAnEnte(enteState, id) && EnteHasThatPoi(enteState, long.Parse(poiId)))
             {
                 try
                 {
@@ -138,7 +144,7 @@ namespace EppoiBackend.Controllers
             //Should be present a control over the ente city and the poi city (Open Route Service)
             IEnteGrain enteGrain = _grainFactory.GetGrain<IEnteGrain>($"ente{id}");
             EnteState enteState = await enteGrain.GetState();
-            if (IsAnEnte(enteState, id))
+            if (IsAnEnte(enteState, id) && EnteHasThatPoi(enteState, long.Parse(poiId)))
             {
                 try
                 {
@@ -149,9 +155,13 @@ namespace EppoiBackend.Controllers
                 {
                     return BadRequest(ex.Message);
                 }
-
             }
             else return Unauthorized();
+        }
+
+        private bool EnteHasThatPoi(EnteState owner, long toCheck)
+        {
+            return owner.PoiIDs.Contains(toCheck);
         }
     }
 }
