@@ -19,7 +19,13 @@ namespace EppoiBackend.Services
             _poiService = poiService;
             _logger = logger;
         }
-        
+
+        /// <summary>
+        /// Create a new ItineraryState
+        /// </summary>
+        /// <param name="state">new ItineraryState to create</param>
+        /// <returns>the created ItineraryState</returns>
+        /// <exception cref="TimeoutException"> throws that exception after 10 times it tried to create a non existing id for the new ItineraryState</exception>
         public async Task<ItineraryState> CreateItinerary(ItineraryState state)
         {
             long idToSet = rnd.NextInt64();
@@ -37,6 +43,11 @@ namespace EppoiBackend.Services
             return await itineraryGrain.GetState();
         }
 
+        /// <summary>
+        /// Retrieve all the itineraries depending on the predicate parameter
+        /// </summary>
+        /// <param name="predicate">Filter function for itineraries</param>
+        /// <returns>Returns the filtered itinerary list</returns>
         public async Task<List<ItineraryState>> GetAllItineraries(Func<ItineraryState, bool>? predicate)
         {
             IItineraryCollectionGrain itineraryCollectionGrain = _grainFactory.GetGrain<IItineraryCollectionGrain>(ITINERARY_COLLECTION_ID);
