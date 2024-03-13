@@ -4,7 +4,6 @@ using System.Text.Json;
 
 namespace EppoiBackend.Services
 {
-    //TODO: use State instead of DTOs
     public class ItineraryService : IItineraryService
     {
         private readonly Random rnd = new();
@@ -24,8 +23,8 @@ namespace EppoiBackend.Services
         /// Create a new ItineraryState
         /// </summary>
         /// <param name="state">new ItineraryState to create</param>
-        /// <returns>the created ItineraryState</returns>
-        /// <exception cref="TimeoutException"> throws that exception after 10 times it tried to create a non existing id for the new ItineraryState</exception>
+        /// <returns>A Task that represent the new ItineraryState</returns>
+        /// <exception cref="TimeoutException">throws an timeoutException after he could not generate a new id for 10 times</exception>
         public async Task<ItineraryState> CreateItinerary(ItineraryState state)
         {
             long idToSet = rnd.NextInt64();
@@ -47,7 +46,7 @@ namespace EppoiBackend.Services
         /// Retrieve all the itineraries depending on the predicate parameter
         /// </summary>
         /// <param name="predicate">Filter function for itineraries</param>
-        /// <returns>Returns the filtered itinerary list</returns>
+        /// <returns>A Task that represent the filtered itinerary list</returns>
         public async Task<List<ItineraryState>> GetAllItineraries(Func<ItineraryState, bool>? predicate)
         {
             IItineraryCollectionGrain itineraryCollectionGrain = _grainFactory.GetGrain<IItineraryCollectionGrain>(ITINERARY_COLLECTION_ID);
@@ -58,6 +57,11 @@ namespace EppoiBackend.Services
             return toReturn.ToList();
         }
 
+        /// <summary>
+        /// Convert an ItineraryState to its DTO counterpart
+        /// </summary>
+        /// <param name="itineraryState">the ItineraryState to convert</param>
+        /// <returns>A Task that represent the converted ItineraryState as DTO </returns>
         public async Task<ItineraryStateDto> ConvertToDto(ItineraryState itineraryState)
         {
             List<PoiState> poiStates = await _poiService.GetPois(itineraryState.Pois);
@@ -72,6 +76,11 @@ namespace EppoiBackend.Services
             };
         }
 
+        /// <summary>
+        /// Convert a list of ItineraryState to their DTO counterparts
+        /// </summary>
+        /// <param name="itineraryStates">the list of ItineraryStates to convert</param>
+        /// <returns>A Task that represent the converted list of ItineraryState as a list of DTOs </returns>
         public async Task<List<ItineraryStateDto>> ConvertToDto(List<ItineraryState> itineraryStates)
         {
             List<ItineraryStateDto> toReturn = [];
@@ -83,6 +92,11 @@ namespace EppoiBackend.Services
             return toReturn;
         }
 
+        /// <summary>
+        /// Retrieve an itinerary based on its id
+        /// </summary>
+        /// <param name="itineraryID">the id of the itinerary</param>
+        /// <returns>A Task that represent the retrieved itinerary</returns>
         public async Task<ItineraryState> GetAnItinerary(long itineraryID)
         {
             IItineraryCollectionGrain itineraryCollectionGrain = _grainFactory.GetGrain<IItineraryCollectionGrain>(ITINERARY_COLLECTION_ID);
@@ -92,6 +106,12 @@ namespace EppoiBackend.Services
             return state;
         }
 
+        /// <summary>
+        /// Update a specific itinerary based on the ItineraryState passed
+        /// </summary>
+        /// <param name="itineraryID">the id of the itinerary to update</param>
+        /// <param name="state">the new state for the itinerary</param>
+        /// <returns>A Task that represent the updated ItineraryState</returns>
         public async Task<ItineraryState> UpdateItinerary(long itineraryID, ItineraryState state)
         {
             IItineraryCollectionGrain itineraryCollectionGrain = _grainFactory.GetGrain<IItineraryCollectionGrain>(ITINERARY_COLLECTION_ID);
@@ -101,14 +121,20 @@ namespace EppoiBackend.Services
             return await itineraryGrain.GetState();
         }
 
-        public async Task DeleteItinerary(long id)
+        /// <summary>
+        /// Delete a specific itinerary
+        /// </summary>
+        /// <param name="itineraryID">the id of the itinerary to delete</param>
+        /// <returns>A Task</returns>
+        public async Task DeleteItinerary(long itineraryID)
         {
             IItineraryCollectionGrain itineraryCollectionGrain = _grainFactory.GetGrain<IItineraryCollectionGrain>(ITINERARY_COLLECTION_ID);
-            await ThrowExceptionIfItineraryNotExists(itineraryCollectionGrain, id);
-            IItineraryGrain itineraryGrain = _grainFactory.GetGrain<IItineraryGrain>($"itinerary{id}");
+            await ThrowExceptionIfItineraryNotExists(itineraryCollectionGrain, itineraryID);
+            IItineraryGrain itineraryGrain = _grainFactory.GetGrain<IItineraryGrain>($"itinerary{itineraryID}");
             await itineraryGrain.ClearState();
-            await itineraryCollectionGrain.RemoveItinerary(id);
+            await itineraryCollectionGrain.RemoveItinerary(itineraryID);
         }
+
 
         private async Task ThrowExceptionIfItineraryNotExists(IItineraryCollectionGrain collectionGrain,long idToCheck)
         {

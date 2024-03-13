@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "F:\\git_repos\\EppoiOrleans\\EppoiBackend\\EppoiBackend.csproj": {}
+    "C:\\Users\\simon\\Documents\\GitHub\\EppoiOrleans\\EppoiBackend\\EppoiBackend.csproj": {}
   },
   "projects": {
-    "F:\\git_repos\\EppoiOrleans\\Abstractions\\Abstractions.csproj": {
+    "C:\\Users\\simon\\Documents\\GitHub\\EppoiOrleans\\Abstractions\\Abstractions.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\git_repos\\EppoiOrleans\\Abstractions\\Abstractions.csproj",
+        "projectUniqueName": "C:\\Users\\simon\\Documents\\GitHub\\EppoiOrleans\\Abstractions\\Abstractions.csproj",
         "projectName": "Abstractions",
-        "projectPath": "F:\\git_repos\\EppoiOrleans\\Abstractions\\Abstractions.csproj",
-        "packagesPath": "C:\\Users\\Yuri Monti\\.nuget\\packages\\",
-        "outputPath": "F:\\git_repos\\EppoiOrleans\\Abstractions\\obj\\",
+        "projectPath": "C:\\Users\\simon\\Documents\\GitHub\\EppoiOrleans\\Abstractions\\Abstractions.csproj",
+        "packagesPath": "C:\\Users\\simon\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\simon\\Documents\\GitHub\\EppoiOrleans\\Abstractions\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Yuri Monti\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\simon\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -70,17 +70,17 @@
         }
       }
     },
-    "F:\\git_repos\\EppoiOrleans\\EppoiBackend\\EppoiBackend.csproj": {
+    "C:\\Users\\simon\\Documents\\GitHub\\EppoiOrleans\\EppoiBackend\\EppoiBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\git_repos\\EppoiOrleans\\EppoiBackend\\EppoiBackend.csproj",
+        "projectUniqueName": "C:\\Users\\simon\\Documents\\GitHub\\EppoiOrleans\\EppoiBackend\\EppoiBackend.csproj",
         "projectName": "EppoiBackend",
-        "projectPath": "F:\\git_repos\\EppoiOrleans\\EppoiBackend\\EppoiBackend.csproj",
-        "packagesPath": "C:\\Users\\Yuri Monti\\.nuget\\packages\\",
-        "outputPath": "F:\\git_repos\\EppoiOrleans\\EppoiBackend\\obj\\",
+        "projectPath": "C:\\Users\\simon\\Documents\\GitHub\\EppoiOrleans\\EppoiBackend\\EppoiBackend.csproj",
+        "packagesPath": "C:\\Users\\simon\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\simon\\Documents\\GitHub\\EppoiOrleans\\EppoiBackend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Yuri Monti\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\simon\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -94,11 +94,11 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "F:\\git_repos\\EppoiOrleans\\Abstractions\\Abstractions.csproj": {
-                "projectPath": "F:\\git_repos\\EppoiOrleans\\Abstractions\\Abstractions.csproj"
+              "C:\\Users\\simon\\Documents\\GitHub\\EppoiOrleans\\Abstractions\\Abstractions.csproj": {
+                "projectPath": "C:\\Users\\simon\\Documents\\GitHub\\EppoiOrleans\\Abstractions\\Abstractions.csproj"
               },
-              "F:\\git_repos\\EppoiOrleans\\Grains\\Grains.csproj": {
-                "projectPath": "F:\\git_repos\\EppoiOrleans\\Grains\\Grains.csproj"
+              "C:\\Users\\simon\\Documents\\GitHub\\EppoiOrleans\\Grains\\Grains.csproj": {
+                "projectPath": "C:\\Users\\simon\\Documents\\GitHub\\EppoiOrleans\\Grains\\Grains.csproj"
               }
             }
           }
@@ -174,17 +174,17 @@
         }
       }
     },
-    "F:\\git_repos\\EppoiOrleans\\Grains\\Grains.csproj": {
+    "C:\\Users\\simon\\Documents\\GitHub\\EppoiOrleans\\Grains\\Grains.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\git_repos\\EppoiOrleans\\Grains\\Grains.csproj",
+        "projectUniqueName": "C:\\Users\\simon\\Documents\\GitHub\\EppoiOrleans\\Grains\\Grains.csproj",
         "projectName": "Grains",
-        "projectPath": "F:\\git_repos\\EppoiOrleans\\Grains\\Grains.csproj",
-        "packagesPath": "C:\\Users\\Yuri Monti\\.nuget\\packages\\",
-        "outputPath": "F:\\git_repos\\EppoiOrleans\\Grains\\obj\\",
+        "projectPath": "C:\\Users\\simon\\Documents\\GitHub\\EppoiOrleans\\Grains\\Grains.csproj",
+        "packagesPath": "C:\\Users\\simon\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\simon\\Documents\\GitHub\\EppoiOrleans\\Grains\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Yuri Monti\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\simon\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -198,8 +198,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "F:\\git_repos\\EppoiOrleans\\Abstractions\\Abstractions.csproj": {
-                "projectPath": "F:\\git_repos\\EppoiOrleans\\Abstractions\\Abstractions.csproj"
+              "C:\\Users\\simon\\Documents\\GitHub\\EppoiOrleans\\Abstractions\\Abstractions.csproj": {
+                "projectPath": "C:\\Users\\simon\\Documents\\GitHub\\EppoiOrleans\\Abstractions\\Abstractions.csproj"
               }
             }
           }

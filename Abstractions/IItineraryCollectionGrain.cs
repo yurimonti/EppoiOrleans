@@ -8,6 +8,6 @@
         Task<List<long>> GetAllItineraryIds();
         Task RemoveItinerary(long id);
 
-        Task RemoveItinerariesWithPoi(long removedPoi);
+        Task RemovePoiFromItineraries(long removedPoi);
     }
 }

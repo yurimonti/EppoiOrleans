@@ -38,6 +38,11 @@ namespace Grains
             return base.OnDeactivateAsync(reason, cancellationToken);
         }
 
+        /// <summary>
+        /// Add a POI id to the list of all existing POI's ids
+        /// </summary>
+        /// <param name="id">the POI id to add</param>
+        /// <returns>A Task</returns>
         public async Task AddPoi(long id)
         {
             _state.State.Add(id);
@@ -47,6 +52,10 @@ namespace Grains
             _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {this.GetPrimaryKeyString()}");
         }
 
+        /// <summary>
+        /// Retrieve all the POI's ids
+        /// </summary>
+        /// <returns>A Task that represent the list of ids of each existing POI</returns>
         public async Task<List<long>> GetAllPoisIds()
         {
             _logger.LogInformation($"PoiCollectionGrain: {this.GetGrainId} retrieved its state");
@@ -54,6 +63,10 @@ namespace Grains
             return await Task.FromResult(_state.State);
         }
 
+        /// <summary>
+        /// Retrieve all the POIS
+        /// </summary>
+        /// <returns>A Task that represent the list of POIStates of each existing POI</returns>
         public async Task<List<PoiState>> GetAllPois()
         {
             _logger.LogInformation($"PoiCollectionGrain: {this.GetGrainId} retrieved its local not persistent state");
@@ -61,6 +74,11 @@ namespace Grains
             return await Task.FromResult(_pois);
         }
 
+        /// <summary>
+        /// Remove a POI id from the list of all POI's ids
+        /// </summary>
+        /// <param name="id">the id to remove</param>
+        /// <returns>A Task</returns>
         public async Task RemovePoi(long id)
         {
             _state.State.Remove(id);
@@ -84,6 +102,11 @@ namespace Grains
             };
         }
 
+        /// <summary>
+        /// Check if an id passed is present on the list of all the POI's ids
+        /// </summary>
+        /// <param name="id">the id to check</param>
+        /// <returns>A Task with value true if present, else a Task with value false</returns>
         public async Task<bool> PoiExists(long id)
         {
             return await Task.FromResult(_state.State.Contains(id));

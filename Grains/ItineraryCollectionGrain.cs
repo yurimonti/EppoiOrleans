@@ -33,6 +33,11 @@ namespace Grains
             return base.OnDeactivateAsync(reason, cancellationToken);
         }
 
+        /// <summary>
+        /// Add an Itinerary id to the list of all existing Itineraries' ids
+        /// </summary>
+        /// <param name="id">the Itinerary id to add</param>
+        /// <returns>A Task</returns>
         public async Task AddItinerary(long id)
         {
             _state.State.Add(id);
@@ -42,6 +47,10 @@ namespace Grains
             _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {this.GetPrimaryKeyString()}");
         }
 
+        /// <summary>
+        /// Retrieve all the Itineraries' ids
+        /// </summary>
+        /// <returns>A Task that represent the list of ids of each existing Itinerary</returns>
         public async Task<List<long>> GetAllItineraryIds()
         {
             _logger.LogInformation($"ItineraryCollectionGrain: {this.GetGrainId} retrieved its state");
@@ -49,6 +58,10 @@ namespace Grains
             return await Task.FromResult(_state.State);
         }
 
+        /// <summary>
+        /// Retrieve all the Itineraries
+        /// </summary>
+        /// <returns>A Task that represent the list of ItineraryState of each existing Itinerary</returns>
         public async Task<List<ItineraryState>> GetAllItineraries()
         {
             var result = await Task.FromResult(_itineraries);
@@ -57,6 +70,11 @@ namespace Grains
             return result;
         }
 
+        /// <summary>
+        /// Remove an Itinerary id from the list of all Itineraies' ids
+        /// </summary>
+        /// <param name="id">the id of the Itinerary remove</param>
+        /// <returns>A Task</returns>
         public async Task RemoveItinerary(long id)
         {
             _state.State.Remove(id);
@@ -80,7 +98,12 @@ namespace Grains
             };
         }
 
-        public async Task RemoveItinerariesWithPoi(long removedPoi)
+        /// <summary>
+        /// Remove a POI from all the itineraries containing it
+        /// </summary>
+        /// <param name="removedPoi">the id of the POI to remove</param>
+        /// <returns>A Task</returns>
+        public async Task RemovePoiFromItineraries(long removedPoi)
         {
             List<long> itIDs =_itineraries.Where(it => it.Pois.Contains(removedPoi)).Select(it =>it.Id).ToList();
             foreach (var it in itIDs)
@@ -90,7 +113,11 @@ namespace Grains
             }
         }
 
-        //TODO: maybe is useless
+        /// <summary>
+        /// Check if an id passed is present on the list of all the Itineraries's ids
+        /// </summary>
+        /// <param name="id">the id to check</param>
+        /// <returns>A Task with value true if present, else a Task with value false</returns>
         public async Task<bool> ItineraryExists(long id)
         {
             return await Task.FromResult(_state.State.Contains(id));
