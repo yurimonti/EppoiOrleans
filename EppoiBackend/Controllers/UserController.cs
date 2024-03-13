@@ -2,7 +2,6 @@
 using EppoiBackend.Dtos;
 using EppoiBackend.Services;
 using Microsoft.AspNetCore.Mvc;
-using OpenTelemetry.Trace;
 using System.Text.Json.Serialization;
 
 namespace EppoiBackend.Controllers
@@ -39,7 +38,7 @@ namespace EppoiBackend.Controllers
         public async ValueTask<IActionResult> SignUp([FromBody] UserInfo userInfo)
         {
             Guid id = Guid.NewGuid();
-            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user/{id}");
+            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>(id);
             await userGrain.SetState(userInfo.Username, new List<long>());
             UserState state = await userGrain.GetState();
             return Ok(state);
@@ -48,7 +47,7 @@ namespace EppoiBackend.Controllers
         [HttpGet("{id}/poi")]
         public async ValueTask<IActionResult> GetPois(Guid id)
         {
-            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user/{id}");
+            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>(id);
             UserState state = await userGrain.GetState();
             if (IsAUser(state, id))
             {
@@ -62,9 +61,7 @@ namespace EppoiBackend.Controllers
         [HttpGet("{id}/poi/{poiId}")]
         public async ValueTask<IActionResult> GetPoiState(Guid id, string poiId)
         {
-            //TODO:returns ente pois instead the whole state of an ente
-            //PoiStateDto stateDtos = await _poiService.GetAPoi(long.Parse(poiId));
-            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user/{id}");
+            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>(id);
             UserState userState = await userGrain.GetState();
             if (IsAUser(userState, id))
             {
@@ -85,7 +82,7 @@ namespace EppoiBackend.Controllers
         [HttpGet("{id}/itinerary")]
         public async ValueTask<IActionResult> GetItineraries(Guid id, [FromQuery] bool mineOnly)
         {
-            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user/{id}");
+            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>(id);
             UserState state = await userGrain.GetState();
             Func<ItineraryState, bool> function = (it => state.ItineraryIDs.Contains(it.Id));
             if (IsAUser(state, id))
@@ -100,9 +97,7 @@ namespace EppoiBackend.Controllers
         [HttpGet("{id}/itinerary/{itineraryId}")]
         public async ValueTask<IActionResult> GetItinerayState(Guid id, string itineraryId)
         {
-            //TODO:returns ente pois instead the whole state of an ente
-            //PoiStateDto stateDtos = await _poiService.GetAPoi(long.Parse(poiId));
-            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user/{id}");
+            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>(id);
             UserState userState = await userGrain.GetState();
             if (IsAUser(userState, id))
             {
@@ -124,7 +119,7 @@ namespace EppoiBackend.Controllers
         public async ValueTask<IActionResult> CreateItinerary([FromBody] ItineraryState state, Guid id)
         {
             //Should be present a control over the ente city and the poi city (Open Route Service)
-            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user/{id}");
+            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>(id);
             UserState userState = await userGrain.GetState();
             if (IsAUser(userState, id))
             {
@@ -150,7 +145,7 @@ namespace EppoiBackend.Controllers
         public async ValueTask<IActionResult> UpdateItinerary([FromBody] ItineraryState state, Guid id, string itineraryId)
         {
             //Should be present a control over the ente city and the poi city (Open Route Service)
-            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user/{id}");
+            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>(id);
             UserState userState = await userGrain.GetState();
             if (IsAUser(userState, id))
             {
@@ -172,7 +167,7 @@ namespace EppoiBackend.Controllers
         public async ValueTask<IActionResult> DeleteItinerary(Guid id, string itineraryId)
         {
             //Should be present a control over the ente city and the poi city (Open Route Service)
-            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>($"user/{id}");
+            IUserGrain userGrain = _grainFactory.GetGrain<IUserGrain>(id);
             UserState userState = await userGrain.GetState();
             if (IsAUser(userState, id))
             {

@@ -1,6 +1,5 @@
 ﻿using Abstractions;
 using EppoiBackend.Dtos;
-using OpenTelemetry.Resources;
 
 namespace EppoiBackend.Services
 {

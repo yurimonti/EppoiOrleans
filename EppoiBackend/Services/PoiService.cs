@@ -3,7 +3,6 @@ using EppoiBackend.Dtos;
 
 namespace EppoiBackend.Services
 {
-    //TODO: add control on the existence of poi into the poi collection grain
     public class PoiService : IPoiService
     {
         private readonly Random rnd = new();

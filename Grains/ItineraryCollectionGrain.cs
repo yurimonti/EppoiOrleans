@@ -73,7 +73,7 @@ namespace Grains
             foreach (var id in _state.State)
             {
                 _logger.LogTrace("Id of itinerary ->", id);
-                IItineraryGrain itineraryGrain = GrainFactory.GetGrain<IItineraryGrain>($"itinerary/{id}");
+                IItineraryGrain itineraryGrain = GrainFactory.GetGrain<IItineraryGrain>(id);
                 ItineraryState itineraryState = await itineraryGrain.GetState();
                 _itineraries.Add(itineraryState);
                 _logger.LogInformation($"Itinerary list information are just loaded to collection {this.GetPrimaryKeyString()}");
@@ -85,14 +85,13 @@ namespace Grains
             List<long> itIDs =_itineraries.Where(it => it.Pois.Contains(removedPoi)).Select(it =>it.Id).ToList();
             foreach (var it in itIDs)
             {
-                var grain = GrainFactory.GetGrain<IItineraryGrain>($"itinerary/{it}");
+                var grain = GrainFactory.GetGrain<IItineraryGrain>(it);
                 ItineraryState state = await grain.GetState();
                 state.Pois.Remove(removedPoi);
                 await grain.SetState(state.Name,state.Description,state.Pois);
             }
         }
 
-        //TODO: maybe is useless
         public async Task<bool> ItineraryExists(long id)
         {
             return await Task.FromResult(_state.State.Contains(id));

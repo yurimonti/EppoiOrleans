@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Abstractions
+﻿namespace Abstractions
 {
-    public interface IUserGrain : IGrainWithStringKey
+    public interface IUserGrain : IGrainWithGuidKey
     {
         Task<UserState> GetState();
         Task SetState(string username, List<long> itineraryIDs);

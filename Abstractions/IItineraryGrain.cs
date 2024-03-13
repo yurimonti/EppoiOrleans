@@ -1,6 +1,6 @@
 ﻿namespace Abstractions
 {
-    public interface IItineraryGrain : IGrainWithStringKey
+    public interface IItineraryGrain : IGrainWithIntegerKey
     {
         Task<ItineraryState> GetState();
         Task<ItineraryState> SetState(string name, string description, List<long> pois);

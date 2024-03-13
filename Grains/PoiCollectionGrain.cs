@@ -1,12 +1,7 @@
 ﻿using Abstractions;
 using Microsoft.Extensions.Logging;
 using Orleans.Runtime;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Grains
 {
@@ -77,7 +72,7 @@ namespace Grains
             foreach (var id in _state.State)
             {
                 _logger.LogTrace("Id of poi ->", id);
-                IPoiGrain poiGrain = GrainFactory.GetGrain<IPoiGrain>($"poi/{id}");
+                IPoiGrain poiGrain = GrainFactory.GetGrain<IPoiGrain>(id);
                 PoiState poiState = await poiGrain.GetState();
                 _pois.Add(poiState);
                 _logger.LogInformation($"Poi list information are just loaded to collection {this.GetPrimaryKeyString()}");

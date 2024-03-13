@@ -22,37 +22,37 @@ namespace Grains
 
         public override Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"UserGrain: {this.GetPrimaryKeyString()} was just activated");
+            _logger.LogInformation($"UserGrain: {Guid.Parse(this.GetPrimaryKeyString())} was just activated");
             return base.OnActivateAsync(cancellationToken);
         }
 
         public override Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"UserGrain: {this.GetPrimaryKeyString()} was just deactivated");
+            _logger.LogInformation($"UserGrain: {Guid.Parse(this.GetPrimaryKeyString())} was just deactivated");
             return base.OnDeactivateAsync(reason, cancellationToken);
         }
 
         public async Task<UserState> GetState()
         {
             UserState state = _state.State;
-            _logger.LogInformation($"UserGrain: {this.GetPrimaryKeyString()} retrieved its state");
-            _logger.LogInformation($"The resulting state for {this.GetPrimaryKeyString()} is {JsonSerializer.Serialize(state)}");
+            _logger.LogInformation($"UserGrain: {Guid.Parse(this.GetPrimaryKeyString())} retrieved its state");
+            _logger.LogInformation($"The resulting state for {Guid.Parse(this.GetPrimaryKeyString())} is {JsonSerializer.Serialize(state)}");
             return await ValueTask.FromResult(state);
         }
 
         public async Task SetState(string username, List<long> itineraryIDs)
         {
-            _state.State = new() { Id = GetPoiIdFromGrainStringKey(), Username = username, ItineraryIDs = itineraryIDs };
+            _state.State = new() { Id = Guid.Parse(this.GetPrimaryKeyString()), Username = username, ItineraryIDs = itineraryIDs };
             await _state.WriteStateAsync();
-            _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {this.GetPrimaryKeyString()}");
-            _logger.LogInformation($"UserGrain: {this.GetPrimaryKeyString()} setted its state");
+            _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {Guid.Parse(this.GetPrimaryKeyString())}");
+            _logger.LogInformation($"UserGrain: {Guid.Parse(this.GetPrimaryKeyString())} setted its state");
         }
 
         public async Task<ItineraryState> CreateItinerary(ItineraryState toCreate)
         {
             long itineraryId = Random.Shared.NextInt64();
             if (await _itineraryCollectionGrain.ItineraryExists(itineraryId)) throw new Exception($"$Itinerary with id:{itineraryId} already exists");
-            IItineraryGrain itineraryGrain = GrainFactory.GetGrain<IItineraryGrain>($"itinerary/{itineraryId}");
+            IItineraryGrain itineraryGrain = GrainFactory.GetGrain<IItineraryGrain>(itineraryId);
             ItineraryState itineraryState = await itineraryGrain.SetState(toCreate.Name, toCreate.Description, toCreate.Pois);
             await _itineraryCollectionGrain.AddItinerary(itineraryId);
             _state.State.ItineraryIDs.Add(itineraryId);
@@ -64,7 +64,8 @@ namespace Grains
         {
             if (!await _itineraryCollectionGrain.ItineraryExists(itineraryToUpdate))
                 throw new ArgumentException($"Itinerary with id:{itineraryToUpdate} doesn't exist");
-            IItineraryGrain itineraryGrain = GrainFactory.GetGrain<IItineraryGrain>($"itinerary/{itineraryToUpdate}");
+            if (!_state.State.ItineraryIDs.Contains(itineraryToUpdate)) throw new Exception("You cannot update this Itinerary");
+            IItineraryGrain itineraryGrain = GrainFactory.GetGrain<IItineraryGrain>(itineraryToUpdate);
             await itineraryGrain.SetState(newState.Name, newState.Description, newState.Pois);
             return newState;
         }
@@ -72,7 +73,8 @@ namespace Grains
         public async Task RemoveItinerary(long toRemove)
         {
             if (!await _itineraryCollectionGrain.ItineraryExists(toRemove)) throw new ArgumentException($"Itinerary with id:{toRemove} doesn't exist");
-            IItineraryGrain itineraryGrain = GrainFactory.GetGrain<IItineraryGrain>($"itinerary/{toRemove}");
+            if (!_state.State.ItineraryIDs.Contains(toRemove)) throw new Exception("You cannot delete this Itinerary");
+            IItineraryGrain itineraryGrain = GrainFactory.GetGrain<IItineraryGrain>(toRemove);
             await itineraryGrain.ClearState();
             _state.State.ItineraryIDs.Remove(toRemove);
             await SetState(_state.State.Username, _state.State.ItineraryIDs);
@@ -88,7 +90,7 @@ namespace Grains
         {
             if (!await GrainFactory.GetGrain<IPoiCollectionGrain>(POI_COLLECTION_ID).PoiExists(toRetrieve)) 
                 throw new ArgumentException($"Poi with id:{toRetrieve} doesn't exist");
-            IPoiGrain poiGrain = GrainFactory.GetGrain<IPoiGrain>($"poi/{toRetrieve}");
+            IPoiGrain poiGrain = GrainFactory.GetGrain<IPoiGrain>(toRetrieve);
             return await poiGrain.GetState();
         }
 
@@ -102,13 +104,13 @@ namespace Grains
         {
             if (!await _itineraryCollectionGrain.ItineraryExists(toRetrieve))
                 throw new ArgumentException($"Itinerary with id:{toRetrieve} doesn't exist");
-            IItineraryGrain itineraryGrain = GrainFactory.GetGrain<IItineraryGrain>($"itinerary/{toRetrieve}");
+            IItineraryGrain itineraryGrain = GrainFactory.GetGrain<IItineraryGrain>(toRetrieve);
             return await itineraryGrain.GetState();
         }
 
-        private Guid GetPoiIdFromGrainStringKey()
-        {
-            return Guid.Parse(this.GetPrimaryKeyString().Split("/")[1]);
-        }
+        //private Guid GetPoiIdFromGrainStringKey()
+        //{
+        //    return Guid.Parse(this.GetPrimaryKeyString().Split("/")[1]);
+        //}
     }
 }

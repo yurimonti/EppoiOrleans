@@ -1,18 +1,12 @@
 ﻿using Abstractions;
-using EppoiBackend.Dtos;
 using EppoiBackend.Services;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Orleans;
-using System;
 using System.Text.Json.Serialization;
 
 namespace EppoiBackend.Controllers
 {
     [ApiController]
     [Route("api/ente/")]
-    //TODO: add here the responsibility to call the conversion method for state to dtos, insted of deletegate it to the PoiService
-    //TODO: ente pois only
     public class EnteController : ControllerBase
     {
         private readonly IGrainFactory _grainFactory;
@@ -41,7 +35,7 @@ namespace EppoiBackend.Controllers
         public async ValueTask<IActionResult> SignUp([FromBody] EnteInfo enteInfo)
         {
             Guid id = Guid.NewGuid();
-            IEnteGrain enteGrain = _grainFactory.GetGrain<IEnteGrain>($"ente/{id}");
+            IEnteGrain enteGrain = _grainFactory.GetGrain<IEnteGrain>(id);
             await enteGrain.SetState(enteInfo.Username, enteInfo.City, []);
             EnteState state = await enteGrain.GetState();
             return Ok(state);
@@ -50,7 +44,7 @@ namespace EppoiBackend.Controllers
         [HttpGet("{id}/poi")]
         public async ValueTask<IActionResult> GetPois(Guid id, [FromQuery] bool mineOnly)
         {
-            IEnteGrain enteGrain = _grainFactory.GetGrain<IEnteGrain>($"ente/{id}");
+            IEnteGrain enteGrain = _grainFactory.GetGrain<IEnteGrain>(id);
             EnteState state = await enteGrain.GetState();
             if (IsAnEnte(state, id))
             {
@@ -65,9 +59,7 @@ namespace EppoiBackend.Controllers
         [HttpGet("{id}/poi/{poiId}")]
         public async ValueTask<IActionResult> GetPoiState(Guid id, string poiId)
         {
-            //TODO:returns ente pois instead the whole state of an ente
-            //PoiStateDto stateDtos = await _poiService.GetAPoi(long.Parse(poiId));
-            IEnteGrain enteGrain = _grainFactory.GetGrain<IEnteGrain>($"ente/{id}");
+            IEnteGrain enteGrain = _grainFactory.GetGrain<IEnteGrain>(id);
             EnteState enteState = await enteGrain.GetState();
             if (IsAnEnte(enteState, id))
             {
@@ -90,7 +82,7 @@ namespace EppoiBackend.Controllers
         public async ValueTask<IActionResult> CreatePoi([FromBody] PoiState state, Guid id)
         {
             //Should be present a control over the ente city and the poi city (Open Route Service)
-            IEnteGrain enteGrain = _grainFactory.GetGrain<IEnteGrain>($"ente/{id}");
+            IEnteGrain enteGrain = _grainFactory.GetGrain<IEnteGrain>(id);
             EnteState enteState = await enteGrain.GetState();
             if (IsAnEnte(enteState, id))
             {
@@ -112,7 +104,7 @@ namespace EppoiBackend.Controllers
         public async ValueTask<IActionResult> UpdatePoi([FromBody] PoiState state, Guid id, string poiId)
         {
             //Should be present a control over the ente city and the poi city (Open Route Service)
-            IEnteGrain enteGrain = _grainFactory.GetGrain<IEnteGrain>($"ente/{id}");
+            IEnteGrain enteGrain = _grainFactory.GetGrain<IEnteGrain>(id);
             EnteState enteState = await enteGrain.GetState();
             if (IsAnEnte(enteState, id))
             {
@@ -134,7 +126,7 @@ namespace EppoiBackend.Controllers
         public async ValueTask<IActionResult> DeletePoi(Guid id, string poiId)
         {
             //Should be present a control over the ente city and the poi city (Open Route Service)
-            IEnteGrain enteGrain = _grainFactory.GetGrain<IEnteGrain>($"ente/{id}");
+            IEnteGrain enteGrain = _grainFactory.GetGrain<IEnteGrain>(id);
             EnteState enteState = await enteGrain.GetState();
             if (IsAnEnte(enteState, id))
             {

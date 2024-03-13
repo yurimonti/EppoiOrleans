@@ -1,10 +1,8 @@
 ﻿using Abstractions;
 using EppoiBackend.Dtos;
-using System.Text.Json;
 
 namespace EppoiBackend.Services
 {
-    //TODO: use State instead of DTOs
     public class ItineraryService : IItineraryService
     {
         private readonly Random rnd = new();

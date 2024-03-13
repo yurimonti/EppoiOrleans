@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Abstractions
+﻿namespace Abstractions
 {
-    public interface IEnteGrain: IGrainWithStringKey
+    public interface IEnteGrain: IGrainWithGuidKey
     {
         ValueTask<EnteState> GetState();
         //ValueTask SetState(Guid id, string username,string city,List<long> poiIDs);

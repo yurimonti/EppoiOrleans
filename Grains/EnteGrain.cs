@@ -1,9 +1,7 @@
 ﻿using Abstractions;
 using Microsoft.Extensions.Logging;
 using Orleans.Runtime;
-using System.Net;
 using System.Text.Json;
-using System.Xml.Linq;
 
 namespace Grains
 {
@@ -24,39 +22,39 @@ namespace Grains
         }
         public override Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"EnteGrain: {this.GetPrimaryKeyString()} was just activated");
+            _logger.LogInformation($"EnteGrain: {Guid.Parse(this.GetPrimaryKeyString())} was just activated");
             return base.OnActivateAsync(cancellationToken);
         }
 
         public override Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"EnteGrain: {this.GetPrimaryKeyString()} was just deactivated");
+            _logger.LogInformation($"EnteGrain: {Guid.Parse(this.GetPrimaryKeyString())} was just deactivated");
             return base.OnDeactivateAsync(reason, cancellationToken);
         }
 
 
         public async ValueTask<EnteState> GetState()
         {
-            _logger.LogInformation($"EnteGrain: {this.GetPrimaryKeyString()} retrieved its state");
-            _logger.LogInformation($"The resulting state for {this.GetPrimaryKeyString()} is {JsonSerializer.Serialize(_state.State)}");
+            _logger.LogInformation($"EnteGrain: {Guid.Parse(this.GetPrimaryKeyString())} retrieved its state");
+            _logger.LogInformation($"The resulting state for {Guid.Parse(this.GetPrimaryKeyString())} is {JsonSerializer.Serialize(_state.State)}");
             return await Task.FromResult(_state.State);
         }
 
         public async ValueTask SetState(string username, string city, List<long> poiIDs)
         {
-            _state.State.Id = GetPoiIdFromGrainStringKey();
+            _state.State.Id = Guid.Parse(this.GetPrimaryKeyString());
             _state.State.City = city;
             _state.State.PoiIDs = poiIDs;
             _state.State.Username = username;
             await _state.WriteStateAsync();
-            _logger.LogInformation($"EnteGrain: {this.GetPrimaryKeyString()} setted its state");
-            _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {this.GetPrimaryKeyString()}");
+            _logger.LogInformation($"EnteGrain: {Guid.Parse(this.GetPrimaryKeyString())} setted its state");
+            _logger.LogInformation($"The state {JsonSerializer.Serialize(_state.State)} is setted to {Guid.Parse(this.GetPrimaryKeyString())}");
         }
 
         public async Task<PoiState> GetPoiState(long toRetrieve)
         {
             if (!await _poiCollectionGrain.PoiExists(toRetrieve)) throw new ArgumentException($"Poi with id:{toRetrieve} doesn't exist");
-            IPoiGrain poiGrain = GrainFactory.GetGrain<IPoiGrain>($"poi/{toRetrieve}");
+            IPoiGrain poiGrain = GrainFactory.GetGrain<IPoiGrain>(toRetrieve);
             return await poiGrain.GetState();
         }
 
@@ -64,7 +62,7 @@ namespace Grains
         {
             long poiId = Random.Shared.NextInt64();
             if (await _poiCollectionGrain.PoiExists(poiId)) throw new Exception($"Poi with id:{poiId} already exists");
-            IPoiGrain poiGrain = GrainFactory.GetGrain<IPoiGrain>($"poi/{poiId}");
+            IPoiGrain poiGrain = GrainFactory.GetGrain<IPoiGrain>(poiId);
             PoiState poiState = await poiGrain.SetState(toCreate.Name, toCreate.Description, toCreate.Address, toCreate.TimeToVisit, toCreate.Coords);
             await _poiCollectionGrain.AddPoi(poiId);
             _state.State.PoiIDs.Add(poiId);
@@ -75,7 +73,8 @@ namespace Grains
         public async Task<PoiState> UpdatePoi(PoiState newState, long poiToUpdate)
         {
             if (!await _poiCollectionGrain.PoiExists(poiToUpdate)) throw new ArgumentException($"Poi with id:{poiToUpdate} doesn't exist");
-            IPoiGrain poiGrain = GrainFactory.GetGrain<IPoiGrain>($"poi/{poiToUpdate}");
+            if (!_state.State.PoiIDs.Contains(poiToUpdate)) throw new Exception("You cannot update this Poi");
+            IPoiGrain poiGrain = GrainFactory.GetGrain<IPoiGrain>(poiToUpdate);
             await poiGrain.SetState(newState.Name,newState.Description,newState.Address,newState.TimeToVisit,newState.Coords);
             return newState;
         }
@@ -84,7 +83,7 @@ namespace Grains
         {
             if (!await _poiCollectionGrain.PoiExists(toRemove)) throw new ArgumentException($"Poi with id:{toRemove} doesn't exist");
             if (!_state.State.PoiIDs.Contains(toRemove)) throw new Exception("You cannot delete this Poi");
-            IPoiGrain poiGrain = GrainFactory.GetGrain<IPoiGrain>($"poi/{toRemove}");
+            IPoiGrain poiGrain = GrainFactory.GetGrain<IPoiGrain>(toRemove);
             await poiGrain.ClearState();
             _state.State.PoiIDs.Remove(toRemove);
             await SetState(_state.State.Username, _state.State.City, _state.State.PoiIDs);
@@ -110,9 +109,9 @@ namespace Grains
             return mineOnly ? pois.Where(poi => _state.State.PoiIDs.Contains(poi.Id)).ToList() : pois;
         }
 
-        private Guid GetPoiIdFromGrainStringKey()
-        {
-            return Guid.Parse(this.GetPrimaryKeyString().Split("/")[1]);
-        }
+        //private Guid GetPoiIdFromGrainStringKey()
+        //{
+        //    return Guid.Parse(this.GetPrimaryKeyString().Split("/")[1]);
+        //}
     }
 }
